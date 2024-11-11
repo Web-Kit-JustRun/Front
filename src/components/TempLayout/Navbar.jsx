@@ -16,7 +16,7 @@ const Navbar = () => {
   };
 
   const getProjectName = () => {
-    setProjectName("PROJECT NAME");
+    setProjectName("사이드바");
   };
 
   useEffect(() => {
@@ -51,13 +51,19 @@ const Navbar = () => {
 };
 
 const NavbarBlock = styled.div`
-  width: 240px;
+  width: 220px;
   display: flex;
   flex-direction: column;
   padding: 20px 10px;
-  height: calc(100vh - 60px); /* Header의 높이만큼 제외 */
+  height: calc(100vh - 150px); /* Header의 높이만큼 제외 */
   background-color: #f8f9fa;
   overflow-y: auto;
+  -ms-overflow-style: none; /* IE와 Edge에서 스크롤 바 숨기기 */
+  scrollbar-width: none; /* Firefox에서 스크롤 바 숨기기 */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari에서 스크롤 바 숨기기 */
+  }
 
   .project-name {
     font-size: 1.5em;

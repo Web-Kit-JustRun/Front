@@ -6,7 +6,7 @@ const Header = () => {
 
   return (
     <HeaderBlock>
-      <div className="header-item first" onClick={() => navigate("/")}>
+      <div className="header-item first" onClick={() => navigate("/main")}>
         <h1>Logo</h1>
       </div>
       <div className="header-item" onClick={() => navigate("/home")}>
@@ -28,9 +28,9 @@ const HeaderBlock = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 60px; /* Header 높이 설정 */
+  height: 100px; /* Header 높이 설정 */
   padding: 0 20px;
-  background-color: #f8f9fa;
+  background-color: #dddddd;
 
   .header-item {
     margin: 0 15px;
