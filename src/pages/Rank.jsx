@@ -1,12 +1,10 @@
 // src/components/RankPage.js
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Header from "../components/TempLayout/Header";
 import axios from "axios";
 
 const Rank = ({}) => {
   const [rankingData, setRankingData] = useState(null);
- const{ userId, token } = await axios.get(``)
   // const fetchRankingData = async () => {
   //   const data = await axios.get(`api/users/${user_id}/ranking`,{Header:{Authorization: Bearer {jwt_token}}});
   //   setRankingData(data);
