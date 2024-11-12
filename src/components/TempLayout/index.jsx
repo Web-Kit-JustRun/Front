@@ -42,9 +42,9 @@ const ContentWrapper = styled.div`
 
 const NavBar = styled.div`
   width: 240px;
-  height: calc(100vh - 100px); /* 화면 높이에서 Header 높이만큼 제외 */
+  height: calc(100vh - 80px); /* 화면 높이에서 Header 높이만큼 제외 */
   position: fixed;
-  top: 100px; /* Header 높이 아래에 위치 */
+  top: 80px; /* Header 높이 아래에 위치 */
   left: 0;
   overflow-y: auto;
   background-color: #f5f5f5; /* Sidebar 배경색 */
