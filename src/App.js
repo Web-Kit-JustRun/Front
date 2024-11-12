@@ -1,35 +1,24 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import TempLayout from "./components/TempLayout/";
 import "./App.css";
 import { publicRoutes, authenticatedRoutes } from "./routes";
+import Layout from "./components/Layout";
 
 function App() {
   return (
-    <>
-      <Routes>
-        {publicRoutes.map((route, idx) => {
-          // index.jsx 파일에서 설정한 경로 토대로 화면에 렌더링함. 자세한 원리는 나도 모름
-          const Element = route.element;
-          return <Route key={idx} path={route.path} element={<Element />} />;
-        })}
+    <Routes>
+      {publicRoutes.map((route, idx) => (
+        <Route key={idx} path={route.path} element={route.element} /> // 수정: <Element /> 제거
+      ))}
 
-        {authenticatedRoutes.map((route, idx) => {
-          const Element = route.element;
-          return (
-            <Route
-              key={idx}
-              path={route.path}
-              element={
-                <TempLayout>
-                  <Element />
-                </TempLayout>
-              }
-            />
-          );
-        })}
-      </Routes>
-    </>
+      {authenticatedRoutes.map((route, idx) => (
+        <Route
+          key={idx}
+          path={route.path}
+          element={<Layout>{route.element}</Layout>} // 수정: <Element /> 제거
+        />
+      ))}
+    </Routes>
   );
 }
 

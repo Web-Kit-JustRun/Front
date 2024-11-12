@@ -2,11 +2,11 @@ import styled from "styled-components";
 
 const Main = () => {
   return (
-    <SearchPwPageBlock>
+    <MainPageBlock>
       <h1>Main Page</h1>
-    </SearchPwPageBlock>
+    </MainPageBlock>
   );
 };
 
-const SearchPwPageBlock = styled.div``;
+const MainPageBlock = styled.div``;
 export default Main;

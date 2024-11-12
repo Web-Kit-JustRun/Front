@@ -4,33 +4,21 @@ import SearchPw from "../pages/Login/SearchPw";
 import Register from "../pages/Login/Register";
 import Main from "../pages/Main";
 import Rank from "../pages/Rank";
+import Lecture from "../pages/Lecture";
 
 //기본 틀임. 로그인 회원가입은 고정된 레이아웃이 없을거라 여기(사실 역할별로 나눈거)
 const publicRoutes = [
-  { path: "/", element: Login },
-  { path: "/login", element: Login },
-  {
-    path: "/searchid",
-    element: SearchId,
-  },
-  {
-    path: "/searchpw",
-    element: SearchPw,
-  },
-  {
-    path: "/register",
-    element: Register,
-  },
-  {
-    path: "/rank",
-    element: Rank,
-  },
+  { path: "/", element: <Login />, layoutType: "none" },
+  { path: "/login", element: <Login />, layoutType: "none" },
+  { path: "/searchid", element: <SearchId />, layoutType: "none" },
+  { path: "/searchpw", element: <SearchPw />, layoutType: "none" },
+  { path: "/register", element: <Register />, layoutType: "none" },
 ];
 
 const authenticatedRoutes = [
-  { path: "/main", element: Main },
-  { path: "/rank", element: Rank },
+  { path: "/main", element: <Main />, layoutType: "main" },
+  { path: "/rank", element: <Rank />, layoutType: "main" },
+  { path: "/lecture", element: <Lecture />, layoutType: "study" },
 ];
 
-// 추가로 필요한게 생각나면 위 형식대로 만들면 됨
-export { publicRoutes, authenticatedRoutes }; // 여기서 export해주는거 까먹으면 오류남
+export { publicRoutes, authenticatedRoutes };
