@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
-const Rank = () => {
+const Rank = ({}) => {
   const [rankingData, setRankingData] = useState(null);
   // const fetchRankingData = async () => {
   //   const data = await axios.get(`api/users/${user_id}/ranking`,{Header:{Authorization: Bearer {jwt_token}}});
@@ -22,7 +22,7 @@ const Rank = () => {
 
   return (
     <RankPageBlock>
-      <h1>Rank Page</h1>a
+      <h1>Rank Page</h1>
       {rankingData ? (
         <div>
           <p>User ID: {rankingData.user_id}</p>

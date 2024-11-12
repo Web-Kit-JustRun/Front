@@ -1,9 +1,10 @@
 import styled from "styled-components";
+import MainPageContainer from "../containers/MainPageContainer";
 
 const Main = () => {
   return (
     <MainPageBlock>
-      <h1>Main Page</h1>
+      <MainPageContainer />
     </MainPageBlock>
   );
 };
