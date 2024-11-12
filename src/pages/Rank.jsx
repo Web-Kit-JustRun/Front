@@ -58,13 +58,13 @@ const Rank = () => {
     <RankPageBlock>
       <h1>Rank Page</h1>
 
-        <div>
+      <div>
         <p>User ID: {user_id}</p>
         <p>Ranking Points: {rankingPoint}</p>
         <p>Ranking Grade: {}</p>
-        </div>
+      </div>
 
-        <p>Loading ranking data...</p>
+      <p>Loading ranking data...</p>
     </RankPageBlock>
   );
 };
