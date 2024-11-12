@@ -1,5 +1,6 @@
 /* eslint-disable no-use-before-define */
 import { useState } from "react";
+import axios from "axios";
 import LoginComponent from "../../components/Login/LoginComponent";
 import { useNavigate } from "react-router-dom";
 
@@ -48,7 +49,7 @@ const LoginContainer = () => {
   };
 
   // 비밀번호 입력 처리 함수
-  const handlePwChange = (e) => {
+  const handlePwChange = async (e) => {
     setPw(e.target.value);
     if (e.target.value !== "") {
       setPwError(false); // 에러 숨김
@@ -56,7 +57,7 @@ const LoginContainer = () => {
   };
 
   // 로그인 버튼 클릭 시 처리
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
     // 입력값이 없으면 에러 메시지 표시
     if (userId === "") {
       setIdError(true);
@@ -65,9 +66,30 @@ const LoginContainer = () => {
       setPwError(true);
     }
 
-    // 입력값이 있으면 로그인 처리
     if (userId !== "" && userPw !== "") {
-      handleSignin();
+      try {
+        // 서버에 로그인 요청
+        const response = await axios.post(
+          "http://localhost:8080/api/auth/login",
+          {
+            username: userId,
+            password: userPw,
+          }
+        );
+
+        // 성공적으로 응답을 받으면 토큰과 사용자 정보를 로컬 스토리지에 저장
+        const { token, user } = response.data;
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("userData", JSON.stringify(user));
+
+        // 로그인 성공 후 메인 페이지로 이동
+        navigate("/main");
+      } catch (error) {
+        // 로그인 실패 시 에러 메시지 표시
+        console.error("로그인 실패:", error);
+        setIdError(true);
+        setPwError(true);
+      }
     }
   };
 
