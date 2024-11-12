@@ -1,12 +1,13 @@
 import styled from "styled-components";
+import MainPageContainer from "../containers/MainPageContainer";
 
 const Main = () => {
   return (
-    <SearchPwPageBlock>
-      <h1>Main Page</h1>
-    </SearchPwPageBlock>
+    <MainPageBlock>
+      <MainPageContainer />
+    </MainPageBlock>
   );
 };
 
-const SearchPwPageBlock = styled.div``;
+const MainPageBlock = styled.div``;
 export default Main;

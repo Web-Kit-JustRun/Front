@@ -1,7 +1,6 @@
 // src/components/RankPage.js
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Header from "../components/TempLayout/Header";
 import axios from "axios";
 
 const Rank = () => {

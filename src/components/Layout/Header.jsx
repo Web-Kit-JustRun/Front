@@ -71,7 +71,7 @@ const HeaderBlock = styled.div`
   width: 100%;
   height: 80px; /* Header 높이 설정 */
   padding: 0 20px;
-  background-color: #dddddd;
+  background-color: #afdfe4;
 `;
 
 const Logo = styled.div`
