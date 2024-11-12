@@ -15,6 +15,10 @@ const Navbar = () => {
     navigate("/issue");
   };
 
+  const handleRankPage = () => {
+    navigate("/rank");
+  };
+
   const getProjectName = () => {
     setProjectName("사이드바");
   };
@@ -26,6 +30,13 @@ const Navbar = () => {
   return (
     <NavbarBlock>
       <div className="project-name">{projectName}</div>
+
+      <SectionLabel>게시판(임시)</SectionLabel>
+
+      <NavItem onClick={handleRankPage}>
+        <i className="fa-solid fa-wrench fa-xl"></i>
+        <span>랭킹 게시판</span>
+      </NavItem>
 
       <SectionLabel>CATEGORY</SectionLabel>
       <NavItem>
