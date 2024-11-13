@@ -1,18 +1,26 @@
 import styled from "styled-components";
 import Navbar from "./Navbar";
 import Header from "./Header";
+import StoreSideBar from "./StoreSideBar";
 
 const Layout = ({ children, layoutType }) => {
+  console.log("type : ");
+  console.log(layoutType);
   return (
     <LayoutWrapper>
       <HeaderWrapper>
         <Header />
       </HeaderWrapper>
       <ContentWrapper>
-        {layoutType === "main" && (
+        {layoutType === "study" && (
           <NavBar>
             <Navbar />
           </NavBar>
+        )}
+        {layoutType === "store" && (
+          <StoreSideBarWrapper>
+            <StoreSideBar />
+          </StoreSideBarWrapper>
         )}
         <ContentArea layoutType={layoutType}>{children}</ContentArea>
       </ContentWrapper>
@@ -52,8 +60,21 @@ const NavBar = styled.div`
   background-color: #f5f5f5;
 `;
 
+const StoreSideBarWrapper = styled.div`
+  width: 240px;
+  height: calc(100vh - 100px);
+  position: fixed;
+  top: 100px;
+  left: 0;
+  overflow-y: auto;
+  background-color: #e0e0e0;
+`;
+
 const ContentArea = styled.main`
-  margin-left: ${(props) => (props.layoutType !== "main" ? "0" : "240px")};
+  margin-left: ${(props) =>
+    props.layoutType === "study" || props.layoutType === "store"
+      ? "240px"
+      : "0"};
   flex: 1;
   padding: 20px;
   overflow-y: auto;
