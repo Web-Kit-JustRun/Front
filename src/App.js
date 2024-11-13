@@ -8,14 +8,16 @@ function App() {
   return (
     <Routes>
       {publicRoutes.map((route, idx) => (
-        <Route key={idx} path={route.path} element={route.element} /> // 수정: <Element /> 제거
+        <Route key={idx} path={route.path} element={route.element} />
       ))}
 
       {authenticatedRoutes.map((route, idx) => (
         <Route
           key={idx}
           path={route.path}
-          element={<Layout>{route.element}</Layout>} // 수정: <Element /> 제거
+          element={
+            <Layout layoutType={route.layoutType}>{route.element}</Layout>
+          }
         />
       ))}
     </Routes>
