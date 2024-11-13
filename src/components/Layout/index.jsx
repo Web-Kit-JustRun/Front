@@ -12,7 +12,7 @@ const Layout = ({ children, layoutType }) => {
         <Header />
       </HeaderWrapper>
       <ContentWrapper>
-        {layoutType === "study" && (
+        {layoutType === "lesson" && (
           <NavBar>
             <Navbar />
           </NavBar>
@@ -52,9 +52,9 @@ const ContentWrapper = styled.div`
 
 const NavBar = styled.div`
   width: 240px;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 80px);
   position: fixed;
-  top: 100px;
+  top: 80px;
   left: 0;
   overflow-y: auto;
   background-color: #f5f5f5;
@@ -62,9 +62,9 @@ const NavBar = styled.div`
 
 const StoreSideBarWrapper = styled.div`
   width: 240px;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 0px);
   position: fixed;
-  top: 100px;
+  top: 80px;
   left: 0;
   overflow-y: auto;
   background-color: #e0e0e0;
@@ -72,7 +72,7 @@ const StoreSideBarWrapper = styled.div`
 
 const ContentArea = styled.main`
   margin-left: ${(props) =>
-    props.layoutType === "study" || props.layoutType === "store"
+    props.layoutType === "lesson" || props.layoutType === "store"
       ? "240px"
       : "0"};
   flex: 1;

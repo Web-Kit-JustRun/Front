@@ -17,6 +17,11 @@ const Header = () => {
     navigate("/login");
   };
 
+  // 랭킹 화면으로 가는 함수
+  const handleRank = () => {
+    navigate("/rank");
+  };
+
   // 수업 정보 가져오기
   useEffect(() => {
     const fetchCourses = async () => {
@@ -53,7 +58,9 @@ const Header = () => {
         </ClassSelect>
         <UserInfo>
           <div>{userData.username}</div>
-          <div>랭킹 점수: {userData.ranking_points}</div>
+          <RankingPoints onClick={handleRank}>
+            랭킹 점수: {userData.ranking_points}
+          </RankingPoints>
         </UserInfo>
         <StoreIcon onClick={() => navigate("/store")}>
           <FaStore />
@@ -69,7 +76,7 @@ const HeaderBlock = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 80px; /* Header 높이 설정 */
+  height: 80px;
   padding: 0 20px;
   background-color: #afdfe4;
 `;
@@ -78,7 +85,7 @@ const Logo = styled.div`
   cursor: pointer;
 
   img {
-    width: 60px; /* 로고 크기 조절 */
+    width: 60px;
     height: auto;
   }
 `;
@@ -87,7 +94,7 @@ const ClassSelect = styled.select`
   padding: 5px;
   font-size: 1em;
   border-radius: 5px;
-  margin-right: 20px; /* 우측으로 위치 조정 */
+  margin-right: 20px;
 `;
 
 const UserSection = styled.div`
@@ -106,6 +113,16 @@ const UserInfo = styled.div`
 
   div {
     font-size: 0.9em;
+  }
+`;
+
+const RankingPoints = styled.div`
+  cursor: pointer;
+  font-size: 0.9em;
+  color: #333;
+
+  &:hover {
+    color: #007bff;
   }
 `;
 
