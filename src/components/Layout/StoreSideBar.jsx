@@ -11,7 +11,13 @@ const StoreSideBar = () => {
       <MenuButton onClick={() => navigate("/menu1")}>메뉴1</MenuButton>
       <MenuButton onClick={() => navigate("/menu2")}>메뉴2</MenuButton>
       <MenuButton onClick={() => navigate("/menu3")}>메뉴3</MenuButton>
-      <PurchaseList>구매 목록</PurchaseList>
+      <PurchaseList
+        onClick={() => {
+          navigate("/purchasehistory");
+        }}
+      >
+        구매 목록
+      </PurchaseList>
     </SideBarContainer>
   );
 };
