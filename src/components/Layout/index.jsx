@@ -40,9 +40,9 @@ const Layout = ({ children, layoutType }) => {
             <Navbar courseName={courseName} /> {/* courseName 전달 */}
           </NavBar>
         )}
-        {layoutType === "store" && (
+        {(layoutType === "store" || layoutType === "purchaseList") && (
           <StoreSideBarWrapper>
-            <StoreSideBar />
+            <StoreSideBar layoutType={layoutType} />
           </StoreSideBarWrapper>
         )}
         <ContentArea layoutType={layoutType}>{children}</ContentArea>
@@ -95,7 +95,9 @@ const StoreSideBarWrapper = styled.div`
 
 const ContentArea = styled.main`
   margin-left: ${(props) =>
-    props.layoutType === "lesson" || props.layoutType === "store"
+    props.layoutType === "lesson" ||
+    props.layoutType === "store" ||
+    props.layoutType === "purchaseList"
       ? "240px"
       : "0"};
   flex: 1;
