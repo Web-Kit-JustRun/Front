@@ -1,9 +1,8 @@
-// src/components/StoreSideBar.jsx
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-const StoreSideBar = () => {
+const StoreSideBar = ({ layoutType }) => {
   const navigate = useNavigate();
 
   return (
@@ -11,13 +10,23 @@ const StoreSideBar = () => {
       <MenuButton onClick={() => navigate("/menu1")}>메뉴1</MenuButton>
       <MenuButton onClick={() => navigate("/menu2")}>메뉴2</MenuButton>
       <MenuButton onClick={() => navigate("/menu3")}>메뉴3</MenuButton>
-      <PurchaseList
-        onClick={() => {
-          navigate("/purchasehistory");
-        }}
-      >
-        구매 목록
-      </PurchaseList>
+      {layoutType === "store" ? (
+        <StorePurchaseButton
+          onClick={() => {
+            navigate("/purchaselist");
+          }}
+        >
+          구매 목록
+        </StorePurchaseButton>
+      ) : (
+        <StorePurchaseButton
+          onClick={() => {
+            navigate("/store");
+          }}
+        >
+          스토어
+        </StorePurchaseButton>
+      )}
     </SideBarContainer>
   );
 };
@@ -43,11 +52,19 @@ const MenuButton = styled.button`
   }
 `;
 
-const PurchaseList = styled.div`
+const StorePurchaseButton = styled.button`
   margin-top: auto;
-  font-size: 12px;
-  color: #333;
-  text-align: center;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #ff8c00; /* 오렌지색 계열 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #e07b00; /* 더 진한 오렌지색 */
+  }
 `;
 
 export default StoreSideBar;
