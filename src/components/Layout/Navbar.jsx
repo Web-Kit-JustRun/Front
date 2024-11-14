@@ -1,79 +1,49 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 
-const Navbar = () => {
-  const [projectName, setProjectName] = useState("");
-
+const Navbar = ({ courseName }) => {
   const navigate = useNavigate();
-
-  const handleDocument = () => {
-    navigate("/document");
-  };
-
-  const handleIssue = () => {
-    navigate("/issue");
-  };
-
-  const handleRankPage = () => {
-    navigate("/rank");
-  };
-
-  const getProjectName = () => {
-    setProjectName("사이드바");
-  };
-
-  useEffect(() => {
-    getProjectName();
-  }, []);
 
   return (
     <NavbarBlock>
-      <div className="project-name">{projectName}</div>
-
-      <SectionLabel>게시판(임시)</SectionLabel>
-
-      <NavItem onClick={handleRankPage}>
-        <i className="fa-solid fa-wrench fa-xl"></i>
-        <span>랭킹 게시판</span>
-      </NavItem>
-
-      <SectionLabel>CATEGORY</SectionLabel>
-      <NavItem>
-        <i className="fa-regular fa-calendar fa-xl"></i>
-        <span>TimeLine</span>
-      </NavItem>
-      <NavItem onClick={handleIssue}>
-        <i className="fa-solid fa-wrench fa-xl"></i>
-        <span>Issue Ticket</span>
+      <Category>{courseName || "강의"}</Category>
+      <SectionLabel>카테고리</SectionLabel>
+      <NavItem onClick={() => navigate("/lectures")}>
+        <span>강의 목록</span>
       </NavItem>
       <NavItem>
-        <i className="fa-solid fa-code fa-xl"></i>
-        <span>Code Issue</span>
+        <span>강의 자료</span>
       </NavItem>
-
-      <SectionLabel>DOC</SectionLabel>
-      <NavItem onClick={handleDocument}>
-        <i className="fa-solid fa-folder fa-xl"></i>
-        <span>Document</span>
+      <NavItem onClick={() => navigate("/assignments")}>
+        <span>과제 목록</span>
+      </NavItem>
+      <NavItem onClick={() => navigate("/quizzes")}>
+        <span>퀴즈 목록</span>
       </NavItem>
     </NavbarBlock>
   );
 };
+
+const Category = styled.div`
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+`;
 
 const NavbarBlock = styled.div`
   width: 220px;
   display: flex;
   flex-direction: column;
   padding: 20px 10px;
-  height: calc(100vh - 150px); /* Header의 높이만큼 제외 */
+  height: calc(100vh - 150px);
   background-color: #f8f9fa;
   overflow-y: auto;
-  -ms-overflow-style: none; /* IE와 Edge에서 스크롤 바 숨기기 */
-  scrollbar-width: none; /* Firefox에서 스크롤 바 숨기기 */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari에서 스크롤 바 숨기기 */
+    display: none;
   }
 
   .project-name {
