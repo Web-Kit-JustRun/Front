@@ -5,10 +5,9 @@ import axios from "axios";
 
 const LessonContainer = () => {
   const navigate = useNavigate();
-  const [courses, setCourses] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [assignments, setAssignments] = useState([]);
-  const [lectures, setLectures] = useState([]);
+  const [lectures, setLectures] = useState([]); // 강의자료 더미 데이터
   const [quizzes, setQuizzes] = useState([]);
 
   const authToken = localStorage.getItem("authToken");
@@ -17,35 +16,28 @@ const LessonContainer = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 전체 수강 과목
-        const coursesResponse = await axios.get(
-          `http://localhost:8080/api/users/${userData.user_id}/courses`,
-          { headers: { Authorization: `Bearer ${authToken}` } }
-        );
-        setCourses(coursesResponse.data);
-
-        // 더미 공지사항
+        // 더미 공지사항 설정
         setAnnouncements([
           { id: 1, title: "공지사항 1", date: "2023-10-01" },
           { id: 2, title: "공지사항 2", date: "2023-10-05" },
           { id: 3, title: "공지사항 3", date: "2023-10-10" },
         ]);
 
-        // 과제 목록
+        // 더미 강의자료 설정
+        setLectures([
+          { course_id: 1, course_name: "데이터베이스 개론" },
+          { course_id: 2, course_name: "운영체제" },
+          { course_id: 3, course_name: "알고리즘 입문" },
+        ]);
+
+        // 과제 목록 API 호출
         const assignmentsResponse = await axios.get(
           `http://localhost:8080/api/courses/1/assignments`,
           { headers: { Authorization: `Bearer ${authToken}` } }
         );
         setAssignments(assignmentsResponse.data.slice(0, 3));
 
-        // 강의 자료
-        const lecturesResponse = await axios.get(
-          `http://localhost:8080/api/users/1/courses`,
-          { headers: { Authorization: `Bearer ${authToken}` } }
-        );
-        setLectures(lecturesResponse.data.slice(0, 3));
-
-        // 퀴즈 리스트
+        // 퀴즈 리스트 API 호출
         const quizzesResponse = await axios.get(
           `http://localhost:8080/api/courses/1/quizzes`,
           { headers: { Authorization: `Bearer ${authToken}` } }
@@ -62,19 +54,6 @@ const LessonContainer = () => {
   return (
     <LessonBlock>
       <ContentSection>
-        <Card>
-          <h2>전체 수강 과목</h2>
-          <Table>
-            <tbody>
-              {courses.map((course) => (
-                <tr key={course.course_id}>
-                  <td>{course.course_name}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Card>
-
         <Card>
           <h2>공지사항</h2>
           <Table>
@@ -155,6 +134,7 @@ const LessonBlock = styled.div`
   align-items: center;
   padding: 20px;
   background-color: #f9fafb;
+  width: 80%;
 `;
 
 const ContentSection = styled.div`
