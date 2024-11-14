@@ -8,7 +8,7 @@ import Lecture from "../pages/Lecture";
 import Store from "../pages/Store";
 import Lesson from "../pages/Lesson";
 
-//기본 틀임. 로그인 회원가입은 고정된 레이아웃이 없을거라 여기(사실 역할별로 나눈거)
+// 기본 틀임. 로그인 회원가입은 고정된 레이아웃이 없을거라 여기(사실 역할별로 나눈거)
 const publicRoutes = [
   { path: "/", element: <Login />, layoutType: "none" },
   { path: "/login", element: <Login />, layoutType: "none" },
@@ -22,7 +22,7 @@ const authenticatedRoutes = [
   { path: "/rank", element: <Rank />, layoutType: "main" },
   { path: "/lecture", element: <Lecture />, layoutType: "study" },
   { path: "/store", element: <Store />, layoutType: "store" },
-  { path: "/lesson", element: <Lesson />, layoutType: "lesson" },
+  { path: "/lesson/:course_id", element: <Lesson />, layoutType: "lesson" },
 ];
 
 export { publicRoutes, authenticatedRoutes };

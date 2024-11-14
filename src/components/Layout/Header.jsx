@@ -11,18 +11,6 @@ const Header = () => {
   const [courses, setCourses] = useState([]);
   const userData = JSON.parse(localStorage.getItem("userData"));
 
-  // 로그아웃 함수
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    navigate("/login");
-  };
-
-  // 랭킹 화면으로 가는 함수
-  const handleRank = () => {
-    navigate("/rank");
-  };
-
-  // 수업 정보 가져오기
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -38,7 +26,9 @@ const Header = () => {
   }, [userData.user_id]);
 
   const handleClassChange = (e) => {
-    setSelectedClass(e.target.value);
+    const courseId = e.target.value;
+    setSelectedClass(courseId);
+    navigate(`/lesson/${courseId}`);
   };
 
   return (
@@ -49,23 +39,33 @@ const Header = () => {
 
       <UserSection>
         <ClassSelect value={selectedClass} onChange={handleClassChange}>
-          <option value="">수업 선택</option>
+          <option value="" disabled hidden>
+            수업 선택
+          </option>
           {courses.map((course) => (
             <option key={course.course_id} value={course.course_id}>
               {course.course_name}
             </option>
           ))}
         </ClassSelect>
+
         <UserInfo>
           <div>{userData.username}</div>
-          <RankingPoints onClick={handleRank}>
+          <RankingPoints onClick={() => navigate("/rank")}>
             랭킹 점수: {userData.ranking_points}
           </RankingPoints>
         </UserInfo>
         <StoreIcon onClick={() => navigate("/store")}>
           <FaStore />
         </StoreIcon>
-        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+        <LogoutButton
+          onClick={() => {
+            localStorage.removeItem("authToken");
+            navigate("/login");
+          }}
+        >
+          Logout
+        </LogoutButton>
       </UserSection>
     </HeaderBlock>
   );
