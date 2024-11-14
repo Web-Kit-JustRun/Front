@@ -4,7 +4,7 @@ import axios from "axios";
 
 const QuizBoard = () => {
   const [quizzes, setQuizzes] = useState([]);
-
+  console.log("퀴즈보드 작업 시작");
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
