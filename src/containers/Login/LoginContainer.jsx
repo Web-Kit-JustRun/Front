@@ -33,9 +33,6 @@ const LoginContainer = () => {
   const [idError, setIdError] = useState(false);
   const [pwError, setPwError] = useState(false);
 
-  // 모달 상태 관리
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const handleNavigate = (path) => {
     navigate(path);
   };
@@ -93,22 +90,15 @@ const LoginContainer = () => {
     }
   };
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
   const propData = {
     userId,
     userPw,
     idError,
     pwError,
-    handleSignin,
     handleIdChange,
     handlePwChange,
     handleFormSubmit,
     handleNavigate,
-    isModalOpen,
-    openModal,
-    closeModal,
   };
 
   return <LoginComponent {...propData} />;

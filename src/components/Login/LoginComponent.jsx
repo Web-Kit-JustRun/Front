@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import InputForm from "../Common/InputForm";
 
@@ -9,14 +8,10 @@ const LoginComponent = (props) => {
     userPw,
     idError,
     pwError,
-    handleSignin,
     handleIdChange,
     handlePwChange,
     handleFormSubmit,
     handleNavigate,
-    isModalOpen,
-    openModal,
-    closeModal,
   } = props;
 
   return (
@@ -51,10 +46,6 @@ const LoginComponent = (props) => {
           |
           <ActionItem onClick={() => handleNavigate("/searchpw")}>
             비밀번호 찾기
-          </ActionItem>
-          |
-          <ActionItem onClick={() => handleNavigate("/register")}>
-            회원가입
           </ActionItem>
         </Actions>
       </LoginForm>
