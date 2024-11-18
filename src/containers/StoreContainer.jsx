@@ -4,13 +4,15 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTicket } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import { useRecoilValue } from "recoil";
+import { userStore } from "../store/userStore";
 
 // 아이콘 라이브러리에 아이콘 추가
 library.add(faTicket);
 
 const StoreContainer = () => {
   const [items, setItems] = useState([]);
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userData = useRecoilValue(userStore).user;
   const [rewardPoints, setRewardPoints] = useState("");
   const { user_id } = userData;
 
@@ -19,7 +21,7 @@ const StoreContainer = () => {
     const fetchItemData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/store/items"
+          process.env.REACT_APP_HOST_URL + "/api/store/items"
         );
         if (response.status === 200) {
           setItems(response.data.items);
@@ -40,7 +42,7 @@ const StoreContainer = () => {
     const fetchRewardData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/users/${user_id}/rewards`
+          process.env.REACT_APP_HOST_URL + `/api/users/${user_id}/rewards`
         );
         if (response.status === 200) {
           setRewardPoints(response.data.reward_points);
@@ -51,7 +53,7 @@ const StoreContainer = () => {
     };
 
     fetchRewardData();
-  }, []);
+  }, [user_id]);
 
   const handleBuy = async (e, item) => {
     e.preventDefault();

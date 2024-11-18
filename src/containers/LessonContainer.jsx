@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { userStore } from "../store/userStore";
 
 const LessonContainer = () => {
   const navigate = useNavigate();
@@ -10,8 +12,8 @@ const LessonContainer = () => {
   const [lectures, setLectures] = useState([]); // 강의자료 더미 데이터
   const [quizzes, setQuizzes] = useState([]);
 
-  const authToken = localStorage.getItem("authToken");
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userState = useRecoilValue(userStore);
+  const { token: authToken, user: userData } = userState;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,14 +34,14 @@ const LessonContainer = () => {
 
         // 과제 목록 API 호출
         const assignmentsResponse = await axios.get(
-          `http://localhost:8080/api/courses/1/assignments`,
+          process.env.REACT_APP_HOST_URL + `/api/courses/1/assignments`,
           { headers: { Authorization: `Bearer ${authToken}` } }
         );
         setAssignments(assignmentsResponse.data.slice(0, 3));
 
         // 퀴즈 리스트 API 호출
         const quizzesResponse = await axios.get(
-          `http://localhost:8080/api/courses/1/quizzes`,
+          process.env.REACT_APP_HOST_URL + `/api/courses/1/quizzes`,
           { headers: { Authorization: `Bearer ${authToken}` } }
         );
         setQuizzes(quizzesResponse.data.slice(0, 3));

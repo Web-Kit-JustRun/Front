@@ -2,47 +2,57 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { FaStore } from "react-icons/fa";
 import logo from "../../img/edukit logo.png";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { currentLessonIdStore, lessonStore } from "../../store/lessonStore";
+import { userStore } from "../../store/userStore";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [selectedClass, setSelectedClass] = useState("");
-  const [courses, setCourses] = useState([]);
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const [lessons, setLessons] = useRecoilState(lessonStore);
+  const [currentLessonId, setCurrentLessonId] =
+    useRecoilState(currentLessonIdStore);
+  const [userData, setUserData] = useRecoilState(userStore);
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/users/${userData.user_id}/courses`
+          process.env.REACT_APP_HOST_URL +
+            `/api/users/${userData.user_id}/courses`
         );
-        setCourses(response.data);
+        setLessons(response.data);
       } catch (error) {
         console.error("수업 정보를 가져오는 데 실패했습니다:", error);
       }
     };
     fetchCourses();
-  }, [userData.user_id]);
+  }, [setCurrentLessonId, setLessons, userData.user_id]);
 
   const handleClassChange = (e) => {
-    const courseId = e.target.value;
-    setSelectedClass(courseId);
-    navigate(`/lesson/${courseId}`);
+    const lessonId = e.target.value;
+    setCurrentLessonId(+lessonId);
+    navigate(`/lesson`);
   };
 
   return (
     <HeaderBlock>
-      <Logo onClick={() => navigate("/main")}>
+      <Logo
+        onClick={() => {
+          setCurrentLessonId("");
+          navigate("/main");
+        }}
+      >
         <img src={logo} alt="EdukIt Logo" />
       </Logo>
 
       <UserSection>
-        <ClassSelect value={selectedClass} onChange={handleClassChange}>
+        <ClassSelect value={currentLessonId} onChange={handleClassChange}>
           <option value="" disabled hidden>
             수업 선택
           </option>
-          {courses.map((course) => (
+          {lessons.map((course) => (
             <option key={course.course_id} value={course.course_id}>
               {course.course_name}
             </option>
@@ -50,9 +60,9 @@ const Header = () => {
         </ClassSelect>
 
         <UserInfo>
-          <div>{userData.username}</div>
+          <div>{userData.user.username}</div>
           <RankingPoints onClick={() => navigate("/rank")}>
-            랭킹 점수: {userData.ranking_points}
+            랭킹 점수: {userData.user.ranking_points}
           </RankingPoints>
         </UserInfo>
         <StoreIcon onClick={() => navigate("/store")}>
@@ -60,7 +70,7 @@ const Header = () => {
         </StoreIcon>
         <LogoutButton
           onClick={() => {
-            localStorage.removeItem("authToken");
+            setUserData(null);
             navigate("/login");
           }}
         >

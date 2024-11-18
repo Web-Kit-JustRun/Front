@@ -6,13 +6,15 @@ const RankContainer = () => {
   const [top_100, set_Top100] = useState([]);
   const [user_rank, setUser_rank] = useState(null);
 
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  const { user_id } = userData;
+  // const userData = useRecoilValue(userStore).user;
+  // const { user_id } = userData;
 
   useEffect(() => {
     const fetchRankingData = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/ranking");
+        const response = await axios.get(
+          process.env.REACT_APP_HOST_URL + "/api/ranking"
+        );
         if (response.status === 200) {
           set_Top100(response.data.top_100);
           setUser_rank(response.data.user_rank);
