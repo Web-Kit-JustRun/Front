@@ -3,10 +3,13 @@ import { useState } from "react";
 import axios from "axios";
 import LoginComponent from "../../components/Login/LoginComponent";
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { userStore } from "../../store/userStore";
 
 //필요한 변수 선언, 함수 정의 등등 처리 후 propDatas로 컴포넌트파일에 넘긴다
 const LoginContainer = () => {
   const navigate = useNavigate();
+  const setUser = useSetRecoilState(userStore);
 
   // 보통은 useState사용해서 변수 선언
   // const [id, setId] = useState("");
@@ -67,7 +70,7 @@ const LoginContainer = () => {
       try {
         // 서버에 로그인 요청
         const response = await axios.post(
-          "http://localhost:8080/api/auth/login",
+          process.env.REACT_APP_HOST_URL + "/api/auth/login",
           {
             username: userId,
             password: userPw,
@@ -76,8 +79,8 @@ const LoginContainer = () => {
 
         // 성공적으로 응답을 받으면 토큰과 사용자 정보를 로컬 스토리지에 저장
         const { token, user } = response.data;
-        localStorage.setItem("authToken", token);
-        localStorage.setItem("userData", JSON.stringify(user));
+
+        setUser({ token, user });
 
         // 로그인 성공 후 메인 페이지로 이동
         navigate("/main");

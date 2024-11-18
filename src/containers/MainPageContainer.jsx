@@ -2,19 +2,23 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { userStore } from "../store/userStore";
+import { currentLessonIdStore } from "../store/lessonStore";
 
 const MainPageContainer = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
-
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  const authToken = localStorage.getItem("authToken");
+  const setCurrentLessonId = useSetRecoilState(currentLessonIdStore);
+  const userState = useRecoilValue(userStore);
+  const { token: authToken, user: userData } = userState;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const coursesResponse = await axios.get(
-          `http://localhost:8080/api/users/${userData.user_id}/courses`,
+          process.env.REACT_APP_HOST_URL +
+            `/api/users/${userData.user_id}/courses`,
           { headers: { Authorization: `Bearer ${authToken}` } }
         );
         setCourses(coursesResponse.data);
@@ -26,7 +30,8 @@ const MainPageContainer = () => {
   }, [userData, authToken]);
 
   const goToLessonPage = (courseId) => {
-    navigate(`/lesson/${courseId}`);
+    setCurrentLessonId(courseId);
+    navigate(`/lesson`);
   };
 
   return (
@@ -40,6 +45,9 @@ const MainPageContainer = () => {
               <tr
                 key={course.course_id}
                 onClick={() => goToLessonPage(course.course_id)}
+                style={{
+                  cursor: "pointer",
+                }}
               >
                 <td>{course.course_name}</td>
               </tr>

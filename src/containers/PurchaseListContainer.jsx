@@ -3,11 +3,13 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTicket } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { userStore } from "../store/userStore";
 
 const PurchaseListContainer = () => {
   const [items, setItems] = useState([]);
   const [rewardPoints, setRewardPoints] = useState(300); // 기본 포인트 (예시)
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userData = useRecoilValue(userStore);
   const { user_id } = userData || {};
 
   // 구매 아이템 목록 조회
@@ -15,7 +17,7 @@ const PurchaseListContainer = () => {
     const fetchItemData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/users/${user_id}/purchases`
+          process.env.REACT_APP_HOST_URL + `/api/users/${user_id}/purchases`
         );
         if (response.status === 200) {
           setItems(response.data.purchases);

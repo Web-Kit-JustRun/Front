@@ -1,14 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import LessonContainer from "../containers/LessonContainer";
-import { useParams } from "react-router-dom";
 
 const Lesson = () => {
-  const { course_id } = useParams();
+  // const { course_id } = useParams();
 
   return (
     <LessonPageBlock>
-      <LessonContainer courseId={course_id} />
+      <LessonContainer />
     </LessonPageBlock>
   );
 };
