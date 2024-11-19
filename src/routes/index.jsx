@@ -34,8 +34,8 @@ const authenticatedRoutes = [
   },
   { path: "/lesson", element: <Lesson />, layoutType: "lesson" },
   { path: "/quizzes", element: <QuizBoard />, layoutType: "lesson" },
-  { path: "/assignments", element: <AssignmentBoard />, layoutType: "lesson" },
   { path: "/quizzes/add", element: <QuizAdd />, layoutType: "lesson" },
+  { path: "/assignments", element: <AssignmentBoard />, layoutType: "lesson" },
 ];
 
 export { publicRoutes, authenticatedRoutes };
