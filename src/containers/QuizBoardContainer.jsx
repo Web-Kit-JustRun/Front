@@ -9,7 +9,7 @@ const QuizBoard = () => {
   const [quizzes, setQuizzes] = useState([]);
   const currentLessonId = useRecoilValue(currentLessonIdStore);
   const navigate = useNavigate();
-
+  console.log("퀴즈보드 작업 시작");
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
