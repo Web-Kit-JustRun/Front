@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 const RankContainer = () => {
   const [top_100, set_Top100] = useState([]);
   const [user_rank, setUser_rank] = useState(null);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   // const userData = useRecoilValue(userStore).user;
   // const { user_id } = userData;
@@ -29,7 +32,16 @@ const RankContainer = () => {
 
   return (
     <RankContainerBlock>
-      <Title>Ranking Board</Title>
+      <TitleContainer>
+        <Title>Ranking Board</Title>
+        <InfoIcon
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          <FontAwesomeIcon icon={faInfoCircle} />
+          {showTooltip && <Tooltip>랭크는 매 학기마다 초기화 됩니다.</Tooltip>}
+        </InfoIcon>
+      </TitleContainer>
       {user_rank && (
         <MyRank>
           <RankCell>{user_rank.rank}등</RankCell>
@@ -75,9 +87,40 @@ const RankContainerBlock = styled.div`
   padding: 20px;
 `;
 
+const TitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+`;
+
 const Title = styled.h1`
   font-size: 2.5rem;
-  margin-bottom: 20px;
+`;
+
+const InfoIcon = styled.div`
+  position: relative;
+  font-size: 1.5rem;
+  color: #555;
+  cursor: pointer;
+
+  &:hover {
+    color: #333;
+  }
+`;
+
+const Tooltip = styled.div`
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 const RankTable = styled.table`
