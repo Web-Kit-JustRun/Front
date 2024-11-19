@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useRecoilValue } from "recoil";
+import { currentLessonIdStore } from "../store/lessonStore";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const QuizBoard = () => {
   const [quizzes, setQuizzes] = useState([]);
+  const currentLessonId = useRecoilValue(currentLessonIdStore);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
         const response = await axios.get(
-          process.env.REACT_APP_HOST_URL + "/api/quizzes/recent"
+          process.env.REACT_APP_HOST_URL +
+            `/api/courses/${currentLessonId}/quizzes/list`
         );
         if (response.status === 200) {
           setQuizzes(response.data);
@@ -20,32 +26,53 @@ const QuizBoard = () => {
     };
 
     fetchQuizzes();
-  }, []);
+  }, [currentLessonId]);
+
+  const getAttemptStatusLabel = (status) => {
+    switch (status) {
+      case "correct":
+        return "정답";
+      case "incorrect":
+        return "오답";
+      case "not_attempted":
+        return "미풀이";
+      default:
+        return "알 수 없음";
+    }
+  };
 
   return (
     <BoardContainer>
       <BoardHeader>
         <Title>퀴즈 게시판</Title>
-        <RegisterButton>등록하기</RegisterButton>
+        <RegisterButton
+          onClick={() => {
+            navigate("/quizzes/add");
+          }}
+        >
+          등록하기
+        </RegisterButton>
       </BoardHeader>
       <ScrollableContainer>
         <Table>
           <thead>
             <tr>
               <TableHeader>문제 ID</TableHeader>
-              <TableHeader>과정 이름</TableHeader>
               <TableHeader>제목</TableHeader>
               <TableHeader>생성 날짜</TableHeader>
+              <TableHeader>풀이 상태</TableHeader>
             </tr>
           </thead>
           <tbody>
             {quizzes.map((quiz) => (
               <TableRow key={quiz.quiz_id}>
                 <TableCell>{quiz.quiz_id}</TableCell>
-                <TableCell>{quiz.course_name}</TableCell>
                 <TableCell>{quiz.title}</TableCell>
                 <TableCell>
                   {new Date(quiz.creation_date).toLocaleDateString("ko-KR")}
+                </TableCell>
+                <TableCell>
+                  {getAttemptStatusLabel(quiz.attempt_status)}
                 </TableCell>
               </TableRow>
             ))}

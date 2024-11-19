@@ -10,6 +10,7 @@ import Lesson from "../pages/Lesson";
 import PurchaseList from "../pages/PurchaseList";
 import QuizBoard from "../pages/QuizBoard";
 import AssignmentBoard from "../pages/AssignmentBoard";
+import QuizAdd from "../pages/QuizAdd";
 
 // 기본 틀임. 로그인 회원가입은 고정된 레이아웃이 없을거라 여기(사실 역할별로 나눈거)
 const publicRoutes = [
@@ -34,6 +35,7 @@ const authenticatedRoutes = [
   { path: "/lesson", element: <Lesson />, layoutType: "lesson" },
   { path: "/quizzes", element: <QuizBoard />, layoutType: "lesson" },
   { path: "/assignments", element: <AssignmentBoard />, layoutType: "lesson" },
+  { path: "/quizzes/add", element: <QuizAdd />, layoutType: "lesson" },
 ];
 
 export { publicRoutes, authenticatedRoutes };
