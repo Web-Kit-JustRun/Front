@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 const RankContainer = () => {
   const [top_100, set_Top100] = useState([]);
   const [user_rank, setUser_rank] = useState(null);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const userData = JSON.parse(localStorage.getItem("userData"));
   const { user_id } = userData;
