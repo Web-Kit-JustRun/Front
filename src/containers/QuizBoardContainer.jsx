@@ -15,7 +15,7 @@ const QuizBoard = () => {
       try {
         const response = await axios.get(
           process.env.REACT_APP_HOST_URL +
-            `/api/courses/${currentLessonId}/quizzes/list`
+            `/api/courses/${currentLessonId}/quizzes/list`,
         );
         if (response.status === 200) {
           setQuizzes(response.data);

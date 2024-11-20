@@ -42,7 +42,7 @@ const MainPage = () => {
                 `/api/users/${userData.user_id}/courses`,
               {
                 headers: { Authorization: `Bearer ${authToken}` },
-              }
+              },
             ),
           ]);
 

@@ -13,7 +13,7 @@ const Layout = ({ children, layoutType }) => {
   const currentLessonId = useRecoilValue(currentLessonIdStore);
 
   const currentLesson = lessons.find(
-    (lesson) => lesson.course_id === currentLessonId
+    (lesson) => lesson.course_id === currentLessonId,
   );
 
   // useEffect(() => {

@@ -20,7 +20,7 @@ const Header = () => {
       try {
         const response = await axios.get(
           process.env.REACT_APP_HOST_URL +
-            `/api/users/${userData.user_id}/courses`
+            `/api/users/${userData.user_id}/courses`,
         );
         setLessons(response.data);
       } catch (error) {
