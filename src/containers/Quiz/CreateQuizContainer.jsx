@@ -32,7 +32,7 @@ const CreateQuizContainer = () => {
 
     try {
       const response = await axios.post(
-        REACT_APP_HOST_URL + `/api/courses/${course_id}/quizzes`,
+        `http://localhost:8080/api/courses/${course_id}/quizzes`,
         {
           title: title,
           question: question,

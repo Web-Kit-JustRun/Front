@@ -1,5 +1,5 @@
-// src/components/StoreContainer.jsx
-import React from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTicket } from "@fortawesome/free-solid-svg-icons";
@@ -149,6 +149,19 @@ const StoreContainerBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: Arial, sans-serif;
+`;
+
+const ScrollableContainer = styled.div`
+  width: 80%;
+  max-width: 800px;
+  height: 500px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
 `;
 
 const ItemList = styled.div`
@@ -159,12 +172,13 @@ const ItemList = styled.div`
 `;
 
 const ItemCard = styled.div`
-  width: 150px;
+  width: 180px;
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
   text-align: center;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 10px;
 `;
 
 const QuantityInput = styled.input`

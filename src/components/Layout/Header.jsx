@@ -2,63 +2,80 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { FaStore } from "react-icons/fa";
 import logo from "../../img/edukit logo.png";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { currentLessonIdStore, lessonStore } from "../../store/lessonStore";
+import { userStore } from "../../store/userStore";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [selectedClass, setSelectedClass] = useState("");
-  const [courses, setCourses] = useState([]);
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const [lessons, setLessons] = useRecoilState(lessonStore);
+  const [currentLessonId, setCurrentLessonId] =
+    useRecoilState(currentLessonIdStore);
+  const [userData, setUserData] = useRecoilState(userStore);
 
-  // 로그아웃 함수
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    navigate("/login");
-  };
-
-  // 수업 정보 가져오기
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/users/${userData.user_id}/courses`
+          process.env.REACT_APP_HOST_URL +
+            `/api/users/${userData.user_id}/courses`
         );
-        setCourses(response.data);
+        setLessons(response.data);
       } catch (error) {
         console.error("수업 정보를 가져오는 데 실패했습니다:", error);
       }
     };
     fetchCourses();
-  }, [userData.user_id]);
+  }, [setCurrentLessonId, setLessons, userData.user_id]);
 
   const handleClassChange = (e) => {
-    setSelectedClass(e.target.value);
+    const lessonId = e.target.value;
+    setCurrentLessonId(+lessonId);
+    navigate(`/lesson`);
   };
 
   return (
     <HeaderBlock>
-      <Logo onClick={() => navigate("/main")}>
+      <Logo
+        onClick={() => {
+          setCurrentLessonId("");
+          navigate("/main");
+        }}
+      >
         <img src={logo} alt="EdukIt Logo" />
       </Logo>
 
       <UserSection>
-        <ClassSelect value={selectedClass} onChange={handleClassChange}>
-          <option value="">수업 선택</option>
-          {courses.map((course) => (
+        <ClassSelect value={currentLessonId} onChange={handleClassChange}>
+          <option value="" disabled hidden>
+            수업 선택
+          </option>
+          {lessons.map((course) => (
             <option key={course.course_id} value={course.course_id}>
               {course.course_name}
             </option>
           ))}
         </ClassSelect>
+
         <UserInfo>
-          <div>{userData.username}</div>
-          <div>랭킹 점수: {userData.ranking_points}</div>
+          <div>{userData.user.username}</div>
+          <RankingPoints onClick={() => navigate("/rank")}>
+            랭킹 점수: {userData.user.ranking_points}
+          </RankingPoints>
         </UserInfo>
         <StoreIcon onClick={() => navigate("/store")}>
           <FaStore />
         </StoreIcon>
-        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+        <LogoutButton
+          onClick={() => {
+            setUserData(null);
+            navigate("/login");
+          }}
+        >
+          Logout
+        </LogoutButton>
       </UserSection>
     </HeaderBlock>
   );
@@ -69,7 +86,7 @@ const HeaderBlock = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 80px; /* Header 높이 설정 */
+  height: 80px;
   padding: 0 20px;
   background-color: #afdfe4;
 `;
@@ -78,7 +95,7 @@ const Logo = styled.div`
   cursor: pointer;
 
   img {
-    width: 60px; /* 로고 크기 조절 */
+    width: 60px;
     height: auto;
   }
 `;
@@ -87,7 +104,7 @@ const ClassSelect = styled.select`
   padding: 5px;
   font-size: 1em;
   border-radius: 5px;
-  margin-right: 20px; /* 우측으로 위치 조정 */
+  margin-right: 20px;
 `;
 
 const UserSection = styled.div`
@@ -106,6 +123,16 @@ const UserInfo = styled.div`
 
   div {
     font-size: 0.9em;
+  }
+`;
+
+const RankingPoints = styled.div`
+  cursor: pointer;
+  font-size: 0.9em;
+  color: #333;
+
+  &:hover {
+    color: #007bff;
   }
 `;
 

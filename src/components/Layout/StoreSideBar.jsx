@@ -1,11 +1,10 @@
-// src/components/StoreSideBar.jsx
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { selectedMenuState } from "../../store/selectedMenuStore";
 import { useRecoilState } from "recoil";
 
-const StoreSideBar = () => {
+const StoreSideBar = ({ layoutType }) => {
   const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useRecoilState(selectedMenuState);
 
@@ -61,11 +60,19 @@ const MenuButton = styled.button`
   }
 `;
 
-const PurchaseList = styled.div`
+const StorePurchaseButton = styled.button`
   margin-top: auto;
-  font-size: 12px;
-  color: #333;
-  text-align: center;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #ff8c00; /* 오렌지색 계열 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #e07b00; /* 더 진한 오렌지색 */
+  }
 `;
 
 export default StoreSideBar;

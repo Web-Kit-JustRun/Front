@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import RankContainer from "../containers/RankContainer";
+import QuizBoardContainer from "../containers/QuizBoardContainer";
 
-const Rank = () => {
-  const RankPageBlock = styled.div`
+const QuizBoard = () => {
+  const QuizBoardBlock = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -14,10 +14,10 @@ const Rank = () => {
   `;
 
   return (
-    <RankPageBlock>
-      <RankContainer />
-    </RankPageBlock>
+    <QuizBoardBlock>
+      <QuizBoardContainer />
+    </QuizBoardBlock>
   );
 };
 
-export default Rank;
+export default QuizBoard;

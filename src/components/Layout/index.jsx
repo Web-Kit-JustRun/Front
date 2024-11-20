@@ -2,24 +2,54 @@ import styled from "styled-components";
 import Navbar from "./Navbar";
 import Header from "./Header";
 import StoreSideBar from "./StoreSideBar";
+import { useRecoilValue } from "recoil";
+import { currentLessonIdStore, lessonStore } from "../../store/lessonStore";
 
 const Layout = ({ children, layoutType }) => {
-  console.log("type : ");
-  console.log(layoutType);
+  // const { course_id } = useParams();
+  // const [courseName, setCourseName] = useState("Loading...");
+
+  const lessons = useRecoilValue(lessonStore);
+  const currentLessonId = useRecoilValue(currentLessonIdStore);
+
+  const currentLesson = lessons.find(
+    (lesson) => lesson.course_id === currentLessonId
+  );
+
+  // useEffect(() => {
+  //   const fetchCourseName = async () => {
+  //     if (course_id) {
+  //       const authToken = localStorage.getItem("authToken");
+  //       try {
+  //         const response = await axios.get(
+  //           `http://localhost:8080/api/courses/${course_id}`,
+  //           { headers: { Authorization: `Bearer ${authToken}` } }
+  //         );
+  //         console.log("Fetched course name:", response.data.course_name); // 응답 데이터 확인
+  //         setCourseName(response.data.course_name); // API 응답이 비어 있을 때 대비
+  //       } catch (error) {
+  //         console.error("Course name fetch failed:", error);
+  //       }
+  //     }
+  //   };
+  //   fetchCourseName();
+  // }, [course_id]);
+
   return (
     <LayoutWrapper>
       <HeaderWrapper>
         <Header />
       </HeaderWrapper>
       <ContentWrapper>
-        {layoutType === "study" && (
+        {layoutType === "lesson" && (
           <NavBar>
-            <Navbar />
+            <Navbar courseName={currentLesson?.course_name ?? "강의"} />{" "}
+            {/* courseName 전달 */}
           </NavBar>
         )}
-        {layoutType === "store" && (
+        {(layoutType === "store" || layoutType === "purchaseList") && (
           <StoreSideBarWrapper>
-            <StoreSideBar />
+            <StoreSideBar layoutType={layoutType} />
           </StoreSideBarWrapper>
         )}
         <ContentArea layoutType={layoutType}>{children}</ContentArea>
@@ -52,9 +82,9 @@ const ContentWrapper = styled.div`
 
 const NavBar = styled.div`
   width: 240px;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 80px);
   position: fixed;
-  top: 100px;
+  top: 80px;
   left: 0;
   overflow-y: auto;
   background-color: #f5f5f5;
@@ -62,9 +92,9 @@ const NavBar = styled.div`
 
 const StoreSideBarWrapper = styled.div`
   width: 240px;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 0px);
   position: fixed;
-  top: 100px;
+  top: 80px;
   left: 0;
   overflow-y: auto;
   background-color: #e0e0e0;
@@ -72,7 +102,9 @@ const StoreSideBarWrapper = styled.div`
 
 const ContentArea = styled.main`
   margin-left: ${(props) =>
-    props.layoutType === "study" || props.layoutType === "store"
+    props.layoutType === "lesson" ||
+    props.layoutType === "store" ||
+    props.layoutType === "purchaseList"
       ? "240px"
       : "0"};
   flex: 1;
