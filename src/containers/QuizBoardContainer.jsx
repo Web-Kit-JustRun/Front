@@ -9,7 +9,7 @@ const QuizBoard = () => {
     const fetchQuizzes = async () => {
       try {
         const response = await axios.get(
-          process.env.REACT_APP_HOST_URL + "/api/quizzes/recent"
+          process.env.REACT_APP_HOST_URL + "/api/quizzes/recent",
         );
         if (response.status === 200) {
           setQuizzes(response.data);

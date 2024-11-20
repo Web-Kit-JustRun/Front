@@ -74,7 +74,7 @@ const LoginContainer = () => {
           {
             username: userId,
             password: userPw,
-          }
+          },
         );
 
         // 성공적으로 응답을 받으면 토큰과 사용자 정보를 로컬 스토리지에 저장

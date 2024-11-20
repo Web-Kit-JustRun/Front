@@ -19,7 +19,7 @@ const MainPageContainer = () => {
         const coursesResponse = await axios.get(
           process.env.REACT_APP_HOST_URL +
             `/api/users/${userData.user_id}/courses`,
-          { headers: { Authorization: `Bearer ${authToken}` } }
+          { headers: { Authorization: `Bearer ${authToken}` } },
         );
         setCourses(coursesResponse.data);
       } catch (error) {

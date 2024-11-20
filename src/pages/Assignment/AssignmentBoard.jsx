@@ -1,21 +1,25 @@
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { currentLessonIdStore } from "../store/lessonStore";
 import axios from "axios";
-import { userStore } from "../store/userStore";
 import styled from "styled-components";
+import { currentLessonIdStore } from "../../store/lessonStore";
+import { userStore } from "../../store/userStore";
+import { useNavigate } from "react-router-dom";
 
 export default function AssignmentBoard() {
   const user = useRecoilValue(userStore).user;
   const currentLessonId = useRecoilValue(currentLessonIdStore);
   const [assignments, setAssignments] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchLessonDetail() {
       const result = await axios.get(
         process.env.REACT_APP_HOST_URL +
-          `/api/courses/${currentLessonId}/assignments`
+          `/api/courses/${currentLessonId}/assignments`,
       );
+
+      console.log(result.data);
 
       setAssignments(result.data);
     }
@@ -34,7 +38,12 @@ export default function AssignmentBoard() {
       <Table>
         {assignments.length > 0 ? (
           assignments.map((assignment) => (
-            <TableCell key={assignment.assignment_id}>
+            <TableCell
+              key={assignment.assignment_id}
+              onClick={() => {
+                navigate(`/assignments/${assignment.assignment_id}`);
+              }}
+            >
               <p>{assignment.title}</p>
               <div>
                 <p>기한 {new Date(assignment.due_date).toLocaleDateString()}</p>

@@ -17,7 +17,7 @@ const PurchaseListContainer = () => {
     const fetchItemData = async () => {
       try {
         const response = await axios.get(
-          process.env.REACT_APP_HOST_URL + `/api/users/${user_id}/purchases`
+          process.env.REACT_APP_HOST_URL + `/api/users/${user_id}/purchases`,
         );
         if (response.status === 200) {
           setItems(response.data.purchases);

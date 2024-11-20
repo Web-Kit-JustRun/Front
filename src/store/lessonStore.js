@@ -10,6 +10,6 @@ export const lessonStore = atom({
 
 export const currentLessonIdStore = atom({
   key: "currentLessonIdStore",
-  default: 1,
+  default: "",
   effects_UNSTABLE: [persistAtom],
 });

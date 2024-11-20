@@ -13,7 +13,7 @@ const RankContainer = () => {
     const fetchRankingData = async () => {
       try {
         const response = await axios.get(
-          process.env.REACT_APP_HOST_URL + "/api/ranking"
+          process.env.REACT_APP_HOST_URL + "/api/ranking",
         );
         if (response.status === 200) {
           set_Top100(response.data.top_100);
