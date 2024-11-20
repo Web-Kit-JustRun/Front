@@ -1,31 +1,52 @@
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import styled from "styled-components";
 import { currentLessonIdStore } from "../../store/lessonStore";
 import { userStore } from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
 
 export default function AssignmentBoard() {
-  const user = useRecoilValue(userStore).user;
+  const userData = useRecoilValue(userStore);
+  const user = userData.user;
+  const token = userData.token;
   const currentLessonId = useRecoilValue(currentLessonIdStore);
   const [assignments, setAssignments] = useState([]);
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
+  console.log(currentLessonId);
 
   useEffect(() => {
     async function fetchLessonDetail() {
-      const result = await axios.get(
-        process.env.REACT_APP_HOST_URL +
-          `/api/courses/${currentLessonId}/assignments`,
-      );
-
-      console.log(result.data);
-
-      setAssignments(result.data);
+      try {
+        const result = await axios.get(
+          process.env.REACT_APP_HOST_URL +
+            `/api/courses/${currentLessonId}/assignments`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
+        setAssignments(result.data);
+      } catch (error) {
+        console.error(error);
+        setError("데이터를 로드하는 중 오류가 발생했습니다.");
+      }
     }
 
     fetchLessonDetail();
-  }, [currentLessonId]);
+  }, [currentLessonId, token]);
+
+  if (error)
+    return (
+      <Layout>
+        <Header>
+          <ErrorParagraph>
+            데이터를 로드하는 도중 오류가 발생했습니다.
+          </ErrorParagraph>
+        </Header>
+      </Layout>
+    );
 
   return (
     <Layout>
@@ -60,6 +81,10 @@ export default function AssignmentBoard() {
     </Layout>
   );
 }
+
+const ErrorParagraph = styled.p`
+  color: red;
+`;
 
 const TableCell = styled.div`
   padding: 10px;
