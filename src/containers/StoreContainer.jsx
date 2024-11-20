@@ -122,7 +122,7 @@ const StoreContainer = () => {
                 <FontAwesomeIcon icon={faTicket} size="2x" />
                 <ItemDetails>
                   <ItemName>{item.item_name}</ItemName>
-                  <ItemPrice>가격: {item.price} Point</ItemPrice>
+                  <ItemPrice>가격: {item.price} Kit</ItemPrice>
                   <QuantityInput
                     type="number"
                     min="1"
