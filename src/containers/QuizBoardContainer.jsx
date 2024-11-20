@@ -28,6 +28,14 @@ const QuizBoard = () => {
     fetchQuizzes();
   }, [currentLessonId]);
 
+  const handleCreate = () => {
+    navigate("/createquiz");
+  };
+
+  const handleRowClick = (quiz) => {
+    navigate("/solvequiz", { state: { quiz } }); // 퀴즈 데이터를 state로 전달
+  };
+
   const getAttemptStatusLabel = (status) => {
     switch (status) {
       case "correct":
@@ -64,18 +72,29 @@ const QuizBoard = () => {
             </tr>
           </thead>
           <tbody>
-            {quizzes.map((quiz) => (
-              <TableRow key={quiz.quiz_id}>
-                <TableCell>{quiz.quiz_id}</TableCell>
-                <TableCell>{quiz.title}</TableCell>
-                <TableCell>
-                  {new Date(quiz.creation_date).toLocaleDateString("ko-KR")}
+            {quizzes && quizzes.length > 0 ? (
+              quizzes.map((quiz) => (
+                <TableRow
+                  key={quiz.quiz_id}
+                  onClick={() => handleRowClick(quiz)}
+                >
+                  <TableCell>{quiz.quiz_id}</TableCell>
+                  <TableCell>{quiz.title}</TableCell>
+                  <TableCell>
+                    {new Date(quiz.creation_date).toLocaleDateString("ko-KR")}
+                  </TableCell>
+                  <TableCell>
+                    {getAttemptStatusLabel(quiz.attempt_status)}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <tr>
+                <TableCell colSpan="4" style={{ textAlign: "center" }}>
+                  퀴즈가 없습니다.
                 </TableCell>
-                <TableCell>
-                  {getAttemptStatusLabel(quiz.attempt_status)}
-                </TableCell>
-              </TableRow>
-            ))}
+              </tr>
+            )}
           </tbody>
         </Table>
       </ScrollableContainer>
@@ -146,6 +165,8 @@ const TableHeader = styled.th`
 `;
 
 const TableRow = styled.tr`
+  cursor: pointer;
+
   &:nth-child(even) {
     background-color: #f2f2f2;
   }
