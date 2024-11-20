@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import InputForm from "../Common/InputForm";
+import logo from "../../img/edukit logo.png"; // 로고 경로
 
 const SearchIdComponent = (props) => {
   const {
@@ -14,78 +15,166 @@ const SearchIdComponent = (props) => {
   } = props;
 
   return (
-    <SearchBlock>
-      <h1>아이디 찾기 페이지</h1>
-      <ButtonContainer>
-        <Button
-          onClick={() => handleNavigate("/searchId")}
-          active={activeButton === "searchId"}
-        >
-          아이디 찾기
-        </Button>
-        <Button
-          onClick={() => handleNavigate("/searchPw")}
-          active={activeButton === "searchPw"}
-        >
-          비밀번호 찾기
-        </Button>
-      </ButtonContainer>
-      <EmailForm>
-        <EmailInput>
-          <InputForm
-            title="이메일"
-            inputTitle="Email"
-            eMsgColor={emailError ? "red" : "white"}
-            eMsgContent={emailError ? "이메일을 입력해 주세요" : ""}
-            onChange={handleEmailChange}
-            value={userEmail}
-          />
-        </EmailInput>
-
-        <AtSymbol>@</AtSymbol>
-        <InputWrapper>
-          <EmailSelectWrapper>
-            <EmailSelect value={emailDomain} onChange={handleEmailDomainChange}>
-              <option value="gmail.com">gmail.com</option>
-              <option value="naver.com">naver.com</option>
-              <option value="hanmail.net">hanmail.net</option>
-            </EmailSelect>
-          </EmailSelectWrapper>
-        </InputWrapper>
-      </EmailForm>
-      <ConfirmButton onClick={handleFormSubmit}>확인</ConfirmButton>
-      <CancelButton onClick={() => handleNavigate("/login")}>취소</CancelButton>
-    </SearchBlock>
+    <SearchIdBlock>
+      <LogoSection>
+        <LogoContainer>
+          <Logo src={logo} alt="금오공대 LMS" />
+          <LogoText>금오공대 LMS</LogoText>
+        </LogoContainer>
+      </LogoSection>
+      <FormSection>
+        <SearchCard>
+          <ButtonContainer>
+            <StyledButton
+              onClick={() => handleNavigate("/searchId")}
+              active={activeButton === "searchId"}
+            >
+              아이디 찾기
+            </StyledButton>
+            <StyledButton
+              onClick={() => handleNavigate("/searchPw")}
+              active={activeButton === "searchPw"}
+            >
+              비밀번호 찾기
+            </StyledButton>
+          </ButtonContainer>
+          <EmailForm>
+            <InputWrapper>
+              <Label>이메일</Label>
+              <InputForm
+                eMsgColor={emailError ? "red" : "white"}
+                eMsgContent={emailError ? "이메일을 입력해 주세요" : ""}
+                onChange={handleEmailChange}
+                value={userEmail}
+              />
+            </InputWrapper>
+            <AtSymbol>@</AtSymbol>
+            <InputWrapper>
+              <EmailSelectWrapper>
+                <EmailSelect
+                  value={emailDomain}
+                  onChange={handleEmailDomainChange}
+                >
+                  <option value="gmail.com">gmail.com</option>
+                  <option value="naver.com">naver.com</option>
+                  <option value="hanmail.net">hanmail.net</option>
+                  <option value="custom">직접 입력</option>
+                </EmailSelect>
+              </EmailSelectWrapper>
+            </InputWrapper>
+          </EmailForm>
+          <ActionButton onClick={handleFormSubmit}>확인</ActionButton>
+          <CancelButton onClick={() => handleNavigate("/login")}>
+            취소
+          </CancelButton>
+        </SearchCard>
+      </FormSection>
+    </SearchIdBlock>
   );
 };
 
+// Styled Components
+const SearchIdBlock = styled.div`
+  display: flex;
+  height: 100vh;
+  background-color: #f4f4f4;
+`;
+
+const LogoSection = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #e9f4ff;
+`;
+
+const LogoContainer = styled.div`
+  text-align: center;
+`;
+
+const Logo = styled.img`
+  width: 150px;
+  height: auto;
+  margin-bottom: 10px;
+`;
+
+const LogoText = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  color: #007bff;
+`;
+
+const FormSection = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+`;
+
+const SearchCard = styled.div`
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 400px;
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333333;
+    text-align: center;
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  margin-bottom: 20px;
+  gap: 10px;
+`;
+
+const StyledButton = styled.button`
+  flex: 1;
+  padding: 10px;
+  background-color: ${(props) => (props.active ? "#4491ff" : "white")};
+  color: ${(props) => (props.active ? "white" : "#333")};
+  border: 1px solid #ddd;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s;
+
+  &:hover {
+    background-color: ${(props) => (props.active ? "#3778d9" : "#f4f4f4")};
+  }
+`;
+
+const EmailForm = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+const InputWrapper = styled.div`
+  flex: 1;
+`;
+
+const Label = styled.label`
+  font-size: 14px;
+  color: #555555;
+  margin-bottom: 5px;
+  display: block;
+`;
+
 const AtSymbol = styled.span`
   padding: 0 5px;
-  font-size: 1em;
+  font-size: 18px;
   color: #333;
-  margin-left: 15px;
-`;
-
-const EmailInput = styled.div`
-  margin-top: 3px;
-`;
-
-const EmailSelect = styled.select`
-  width: 100%;
-  padding: 10px;
-  border: none;
-  outline: none;
-  background-color: transparent;
-  font-size: 1em;
-  appearance: none;
-  -webkit-appearance: none;
-  cursor: pointer;
-  border-bottom: 1px solid grey;
 `;
 
 const EmailSelectWrapper = styled.div`
   position: relative;
-  width: 110%;
+  width: 100%;
 
   &::after {
     content: "▼";
@@ -99,75 +188,43 @@ const EmailSelectWrapper = styled.div`
   }
 `;
 
-const EmailForm = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
-const SearchBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  margin-bottom: 20px;
-`;
-
-const Button = styled.button`
-  flex: 1;
+const EmailSelect = styled.select`
+  width: 100%;
   padding: 10px;
-  background-color: ${(props) => (props.active ? "#4491ff" : "white")};
-  color: ${(props) => (props.active ? "white" : "#000")};
-  border: 1px solid #ddd;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  appearance: none;
+  -webkit-appearance: none;
   cursor: pointer;
-  &:hover {
-    background-color: #4a78ba;
-    color: white;
-  }
+  border-bottom: 1px solid #ddd;
+  color: #333;
 `;
 
-const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+const ActionButton = styled.button`
   width: 100%;
-  max-width: 300px;
-  margin-top: 6px;
-
-  label {
-    margin-bottom: 5px;
-  }
-
-  input {
-    padding: 10px;
-    border-radius: 4px;
-  }
-`;
-
-const ConfirmButton = styled.button`
-  width: 100%;
-  max-width: 300px;
   padding: 10px;
   background-color: #4491ff;
   color: white;
   border: none;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
   margin-bottom: 10px;
+  transition: all 0.3s;
+
   &:hover {
-    background-color: #4a78ba;
+    background-color: #3778d9;
   }
 `;
 
-const CancelButton = styled.span`
-  cursor: pointer;
+const CancelButton = styled(ActionButton)`
+  background-color: #f4f4f4;
   color: #6b6b6b;
-  text-decoration: underline;
+
   &:hover {
-    color: #000000;
+    background-color: #e0e0e0;
+    color: #333;
   }
 `;
 
