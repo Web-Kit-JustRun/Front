@@ -2,16 +2,40 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { selectedMenuState } from "../../store/selectedMenuStore";
+import { useRecoilState } from "recoil";
 
 const StoreSideBar = () => {
   const navigate = useNavigate();
+  const [selectedMenu, setSelectedMenu] = useRecoilState(selectedMenuState);
 
+  // 메뉴 클릭 시 상태 업데이트 및 이동
+  const handleMenuClick = (menu) => {
+    setSelectedMenu(menu); // Recoil 상태 업데이트
+  };
   return (
     <SideBarContainer>
-      <MenuButton onClick={() => navigate("/menu1")}>메뉴1</MenuButton>
-      <MenuButton onClick={() => navigate("/menu2")}>메뉴2</MenuButton>
-      <MenuButton onClick={() => navigate("/menu3")}>메뉴3</MenuButton>
-      <PurchaseList>구매 목록</PurchaseList>
+      <MenuButton onClick={() => handleMenuClick("")}>전체메뉴</MenuButton>
+      <MenuButton onClick={() => handleMenuClick("타입1")}>메뉴1</MenuButton>
+      <MenuButton onClick={() => handleMenuClick("타입2")}>메뉴2</MenuButton>
+      <MenuButton onClick={() => handleMenuClick("타입3")}>메뉴3</MenuButton>
+      {layoutType === "store" ? (
+        <StorePurchaseButton
+          onClick={() => {
+            navigate("/purchaselist");
+          }}
+        >
+          구매 목록
+        </StorePurchaseButton>
+      ) : (
+        <StorePurchaseButton
+          onClick={() => {
+            navigate("/store");
+          }}
+        >
+          스토어
+        </StorePurchaseButton>
+      )}
     </SideBarContainer>
   );
 };
