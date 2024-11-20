@@ -80,7 +80,7 @@ const PurchaseListContainer = () => {
               <TableCell>{item.item_type}</TableCell>
               <TableCell>{item.item_name}</TableCell>
               <TableCell>{formatDate(item.purchase_date)}</TableCell>
-              <TableCell>{item.price} Point</TableCell>
+              <TableCell>{item.price} Kit</TableCell>
               <TableCell>{item.is_used ? "사용 완료" : "사용 가능"}</TableCell>
             </TableRow>
           ))}
