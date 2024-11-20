@@ -10,7 +10,7 @@ const StoreSideBar = ({ layoutType }) => {
   const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useRecoilState(selectedMenuState);
   const userData = useRecoilValue(userStore).user; // 사용자 데이터 가져오기
-  const { user_id } = userData || {};
+  const { userId } = userData || {};
   const [rewardPoints, setRewardPoints] = useState(null); // 리워드 포인트 상태
 
   // 리워드 포인트 가져오기
@@ -18,7 +18,7 @@ const StoreSideBar = ({ layoutType }) => {
     const fetchRewardPoints = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_HOST_URL}/api/users/${user_id}/rewards`
+          `${process.env.REACT_APP_HOST_URL}/api/users/${userId}/rewards`,
         );
         if (response.status === 200) {
           setRewardPoints(response.data.reward_points); // 리워드 포인트 설정
@@ -29,10 +29,10 @@ const StoreSideBar = ({ layoutType }) => {
       }
     };
 
-    if (user_id) {
+    if (userId) {
       fetchRewardPoints(); // 사용자 ID가 있을 경우 API 호출
     }
-  }, [user_id]);
+  }, [userId]);
 
   // 메뉴 클릭 시 상태 업데이트
   const handleMenuClick = (menu) => {

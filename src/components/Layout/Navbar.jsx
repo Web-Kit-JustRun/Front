@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = ({ courseName }) => {
+const Navbar = ({ course_name }) => {
   const navigate = useNavigate();
 
   return (
     <NavbarBlock>
-      <Category>{courseName || "강의"}</Category>
+      <Category>{course_name || "강의"}</Category>
       <SectionLabel>카테고리</SectionLabel>
       <NavItem onClick={() => navigate("/lectures")}>
         <span>강의 목록</span>

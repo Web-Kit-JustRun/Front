@@ -3,24 +3,40 @@ import styled from "styled-components";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { useRecoilValue } from "recoil";
+import { userStore } from "../store/userStore";
 
 const RankContainer = () => {
   const [top_100, set_Top100] = useState([]);
   const [user_rank, setUser_rank] = useState(null);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // const userData = useRecoilValue(userStore).user;
-  // const { user_id } = userData;
+  const userData = useRecoilValue(userStore);
+  // const { userId } = userData;
 
   useEffect(() => {
     const fetchRankingData = async () => {
       try {
-        const response = await axios.get(
-          process.env.REACT_APP_HOST_URL + "/api/ranking",
+        const topRankingPromise = axios.get(
+          process.env.REACT_APP_HOST_URL + "/api/ranking/top",
         );
-        if (response.status === 200) {
-          set_Top100(response.data.top_100);
-          setUser_rank(response.data.user_rank);
+
+        const userRankingPromise = axios.get(
+          process.env.REACT_APP_HOST_URL +
+            `/api/users/${userData.user.userId}/ranking`,
+          { headers: { Authorization: `Bearer ${userData.token}` } },
+        );
+
+        const [topRankingResult, userRankingResult] = await Promise.allSettled([
+          topRankingPromise,
+          userRankingPromise,
+        ]);
+        if (topRankingResult.status === "fulfilled") {
+          set_Top100(topRankingResult.value.data);
+        }
+        if (userRankingResult.status === "fulfilled") {
+          console.log(userRankingResult.value.data);
+          setUser_rank(userRankingResult.value.data);
         }
       } catch (error) {
         console.error("Error fetching ranking data:", error);
@@ -28,7 +44,7 @@ const RankContainer = () => {
     };
 
     fetchRankingData();
-  }, []);
+  }, [userData.token, userData.user.userId]);
 
   return (
     <RankContainerBlock>
@@ -44,9 +60,9 @@ const RankContainer = () => {
       </TitleContainer>
       {user_rank && (
         <MyRank>
-          <RankCell>{user_rank.rank}등</RankCell>
+          <RankCell>상위 {user_rank.ranking_percentage}%</RankCell>
+          <RankCell>{userData.user.name}</RankCell>
           <RankCell>{user_rank.ranking_points} points</RankCell>
-          <RankCell>{user_rank.name}</RankCell>
         </MyRank>
       )}
       <ScrollableContainer>
@@ -63,7 +79,7 @@ const RankContainer = () => {
               <RankRow key={user.rank}>
                 <RankCell>{user.rank}</RankCell>
                 <RankCell>{user.name}</RankCell>
-                <RankCell>{user.ranking_points}</RankCell>
+                <RankCell>{user.rankingPoints}</RankCell>
               </RankRow>
             ))}
           </tbody>

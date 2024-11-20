@@ -16,7 +16,7 @@ const MyQuizContainer = () => {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             },
-          }
+          },
         );
         if (response.status === 200) {
           setQuizzes(response.data); // 데이터를 상태로 저장
@@ -60,8 +60,8 @@ const MyQuizContainer = () => {
                     {quiz.status === "approved"
                       ? "등록완료"
                       : quiz.status === "rejected"
-                      ? "등록거절"
-                      : "등록대기"}
+                        ? "등록거절"
+                        : "등록대기"}
                   </StatusButton>
                 </TableCell>
               </TableRow>
@@ -164,8 +164,8 @@ const StatusButton = styled.div`
     props.status === "approved"
       ? "green"
       : props.status === "rejected"
-      ? "red"
-      : "gray"};
+        ? "red"
+        : "gray"};
 `;
 
 const Loading = styled.div`

@@ -46,9 +46,18 @@ const LoginComponent = (props) => {
                 onChange={handlePwChange}
                 value={userPw}
                 inputTitle={"비밀번호를 입력해주세요"}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    handleFormSubmit();
+                  }
+                }}
               />
             </InputWrapper>
             <ActionButton onClick={handleFormSubmit}>로그인</ActionButton>
+            <ActionButton onClick={() => handleNavigate("/register")}>
+              회원가입
+            </ActionButton>
+
             <ActionGroup>
               <ActionItem onClick={() => handleNavigate("/searchid")}>
                 아이디 찾기
