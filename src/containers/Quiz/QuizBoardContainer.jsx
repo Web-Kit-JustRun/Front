@@ -1,39 +1,41 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useRecoilValue } from "recoil";
-import { currentLessonIdStore } from "../store/lessonStore";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const QuizBoard = () => {
-  const [quizzes, setQuizzes] = useState([]);
-  const currentLessonId = useRecoilValue(currentLessonIdStore);
+const MyQuizContainer = () => {
   const navigate = useNavigate();
+  const [quizzes, setQuizzes] = useState([]);
+  const course_id = 1;
 
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
         const response = await axios.get(
-          process.env.REACT_APP_HOST_URL +
-            `/api/courses/${currentLessonId}/quizzes/list`,
+          process.env.REACT_APP_HOST_URL + `/api/courses/${course_id}/quizzes`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
         );
         if (response.status === 200) {
           setQuizzes(response.data);
         }
       } catch (error) {
-        console.error("Error fetching quizzes:", error);
+        console.error("퀴즈 데이터를 불러오는 중 오류 발생:", error);
       }
     };
 
     fetchQuizzes();
-  }, [currentLessonId]);
-
-  const handleCreate = () => {
-    navigate("/createquiz");
-  };
+  }, []);
 
   const handleRowClick = (quiz) => {
-    navigate("/solvequiz", { state: { quiz } }); // 퀴즈 데이터를 state로 전달
+    navigate("/solvequiz", { state: { quiz } });
+  };
+
+  const handleMyQuizzesClick = () => {
+    navigate("/myquiz");
   };
 
   const getAttemptStatusLabel = (status) => {
@@ -53,27 +55,28 @@ const QuizBoard = () => {
     <BoardContainer>
       <BoardHeader>
         <Title>퀴즈 게시판</Title>
-        <RegisterButton
-          onClick={() => {
-            navigate("/quizzes/add");
-          }}
-        >
-          등록하기
-        </RegisterButton>
+        <ButtonGroup>
+          <RegisterButton onClick={() => navigate("/quizzes/add")}>
+            등록하기
+          </RegisterButton>
+          <MyQuizzesButton onClick={handleMyQuizzesClick}>
+            내가 만든 문제
+          </MyQuizzesButton>
+        </ButtonGroup>
       </BoardHeader>
-      <ScrollableContainer>
-        <Table>
-          <thead>
-            <tr>
-              <TableHeader>문제 ID</TableHeader>
-              <TableHeader>제목</TableHeader>
-              <TableHeader>생성 날짜</TableHeader>
-              <TableHeader>풀이 상태</TableHeader>
-            </tr>
-          </thead>
-          <tbody>
-            {quizzes && quizzes.length > 0 ? (
-              quizzes.map((quiz) => (
+      {quizzes.length > 0 ? (
+        <ScrollableContainer>
+          <Table>
+            <thead>
+              <tr>
+                <TableHeader>문제 ID</TableHeader>
+                <TableHeader>제목</TableHeader>
+                <TableHeader>생성 날짜</TableHeader>
+                <TableHeader>풀이 상태</TableHeader>
+              </tr>
+            </thead>
+            <tbody>
+              {quizzes.map((quiz) => (
                 <TableRow
                   key={quiz.quiz_id}
                   onClick={() => handleRowClick(quiz)}
@@ -87,22 +90,18 @@ const QuizBoard = () => {
                     {getAttemptStatusLabel(quiz.attempt_status)}
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <tr>
-                <TableCell colSpan="4" style={{ textAlign: "center" }}>
-                  퀴즈가 없습니다.
-                </TableCell>
-              </tr>
-            )}
-          </tbody>
-        </Table>
-      </ScrollableContainer>
+              ))}
+            </tbody>
+          </Table>
+        </ScrollableContainer>
+      ) : (
+        <Loading>불러올 데이터가 없습니다.</Loading>
+      )}
     </BoardContainer>
   );
 };
 
-export default QuizBoard;
+export default MyQuizContainer;
 
 // Styled Components
 const BoardContainer = styled.div`
@@ -128,17 +127,37 @@ const Title = styled.h2`
   color: #333;
 `;
 
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
 const RegisterButton = styled.button`
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 16px;
-  color: white;
+  color: #fff;
   background-color: #007bff;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: #0056b3;
+  }
+`;
+
+const MyQuizzesButton = styled.button`
+  padding: 12px 24px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #28a745;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #218838;
   }
 `;
 
@@ -165,10 +184,12 @@ const TableHeader = styled.th`
 `;
 
 const TableRow = styled.tr`
-  cursor: pointer;
-
   &:nth-child(even) {
     background-color: #f2f2f2;
+  }
+
+  &:hover {
+    background-color: #f1f1f1;
   }
 `;
 
@@ -176,4 +197,10 @@ const TableCell = styled.td`
   padding: 10px;
   border: 1px solid #ddd;
   text-align: left;
+`;
+
+const Loading = styled.div`
+  margin-top: 20px;
+  font-size: 16px;
+  color: gray;
 `;

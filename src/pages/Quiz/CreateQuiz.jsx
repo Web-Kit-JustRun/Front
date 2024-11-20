@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import QuizBoardContainer from "../containers/QuizBoardContainer";
+import CreateQuizContainer from "../../containers/Quiz/CreateQuizContainer";
 
-const QuizBoard = () => {
-  const QuizBoardBlock = styled.div`
+const CreateQuiz = () => {
+  const CreateQuizBlock = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -14,10 +14,10 @@ const QuizBoard = () => {
   `;
 
   return (
-    <QuizBoardBlock>
-      <QuizBoardContainer />
-    </QuizBoardBlock>
+    <CreateQuizBlock>
+      <CreateQuizContainer />
+    </CreateQuizBlock>
   );
 };
 
-export default QuizBoard;
+export default CreateQuiz;
