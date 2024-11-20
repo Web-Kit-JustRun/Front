@@ -3,47 +3,63 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTicket } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { userStore } from "../store/userStore";
+import { selectedMenuState } from "../store/selectedMenuStore";
 
 const PurchaseListContainer = () => {
-  const [items, setItems] = useState([]);
-  const [rewardPoints, setRewardPoints] = useState(300); // 기본 포인트 (예시)
-  const userData = useRecoilValue(userStore);
+  const [items, setItems] = useState([]); // 전체 구매 목록
+  const userData = useRecoilValue(userStore).user;
   const { user_id } = userData || {};
+  const [selectedMenu, setSelectedMenu] = useRecoilState(selectedMenuState); // 선택된 메뉴
 
   // 구매 아이템 목록 조회
   useEffect(() => {
-    const fetchItemData = async () => {
+    setSelectedMenu("");
+    const fetchItems = async () => {
       try {
         const response = await axios.get(
           process.env.REACT_APP_HOST_URL + `/api/users/${user_id}/purchases`
         );
+
         if (response.status === 200) {
-          setItems(response.data.purchases);
+          setItems(response.data); // 전체 데이터를 상태에 저장
+          console.log("🚀 ~ fetchItems ~ response.data:", response.data);
         }
       } catch (error) {
         console.error("Error fetching item data:", error);
       }
     };
 
-    fetchItemData();
-  }, [user_id]);
+    fetchItems();
+  }, [user_id]); // user_id 변경 시만 요청
+
+  // selectedMenu로 아이템 필터링
+  const filteredItems = selectedMenu
+    ? items.filter((item) => item.item_type === selectedMenu) // 선택된 메뉴에 맞는 아이템만 필터링
+    : items; // 선택된 메뉴가 없으면 전체 데이터
+
+  console.log("🚀 ~ PurchaseListContainer ~ filteredItems:", filteredItems);
 
   // 날짜 포맷팅 함수
   const formatDate = (dateString) => {
-    return new Intl.DateTimeFormat("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(dateString));
+    if (!dateString) return "유효하지 않은 날짜";
+    try {
+      return new Intl.DateTimeFormat("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(new Date(dateString));
+    } catch (error) {
+      console.error("Invalid date:", dateString, error);
+      return "유효하지 않은 날짜";
+    }
   };
 
   return (
     <Container>
-      <CurrentPoints>현재 포인트: {rewardPoints}</CurrentPoints>
       <Table>
         <thead>
           <tr>
@@ -56,7 +72,7 @@ const PurchaseListContainer = () => {
           </tr>
         </thead>
         <tbody>
-          {items.map((item) => (
+          {filteredItems.map((item) => (
             <TableRow key={item.purchase_id}>
               <TableCell>
                 <FontAwesomeIcon icon={faTicket} />
@@ -81,12 +97,6 @@ const Container = styled.div`
   width: 100%;
   padding: 20px;
   font-family: Arial, sans-serif;
-`;
-
-const CurrentPoints = styled.div`
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 20px;
 `;
 
 const Table = styled.table`
