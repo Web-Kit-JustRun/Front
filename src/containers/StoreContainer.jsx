@@ -19,7 +19,7 @@ const StoreContainer = () => {
   const { token: authToken, user: userData } = userState;
   // 아이템별 수량 관리
   const [quantities, setQuantities] = useState({});
-  const { user_id } = userData;
+  const { userId } = userData;
   console.log("selectedMenu:", selectedMenu); // 상태 확인
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const StoreContainer = () => {
     const fetchItemData = async () => {
       try {
         const response = await axios.get(
-          process.env.REACT_APP_HOST_URL + "/api/store/items"
+          process.env.REACT_APP_HOST_URL + "/api/store/items",
         );
         if (response.status === 200) {
           setItems(response.data);
@@ -52,7 +52,7 @@ const StoreContainer = () => {
     const fetchRewardData = async () => {
       try {
         const response = await axios.get(
-          process.env.REACT_APP_HOST_URL + `/api/users/${user_id}/rewards`
+          process.env.REACT_APP_HOST_URL + `/api/users/${userId}/rewards`,
         );
         if (response.status === 200) {
           setRewardPoints(response.data.reward_points);
@@ -63,7 +63,7 @@ const StoreContainer = () => {
     };
 
     fetchRewardData();
-  }, [user_id]);
+  }, [userId]);
 
   // 선택된 메뉴에 따른 아이템 필터링
   const filteredItems = selectedMenu
@@ -91,14 +91,14 @@ const StoreContainer = () => {
             purchase_id: item.item_id,
             price: item.price,
             quantity: quantity, // 수량 포함
-          }
+          },
         );
 
         if (response.status === 200) {
           alert(
             `"${item.item_name}"을(를) ${
               item.price * quantity
-            } 포인트에 구매했습니다!`
+            } 포인트에 구매했습니다!`,
           );
         } else {
           alert("구매 요청이 완료되지 않았습니다. 다시 시도해주세요.");

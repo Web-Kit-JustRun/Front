@@ -39,10 +39,10 @@ const MainPage = () => {
             }),
             axios.get(
               process.env.REACT_APP_HOST_URL +
-                `/api/users/${userData.user_id}/courses`,
+                `/api/users/${userData.userId}/courses`,
               {
                 headers: { Authorization: `Bearer ${authToken}` },
-              }
+              },
             ),
           ]);
 
@@ -62,8 +62,8 @@ const MainPage = () => {
 
   console.log("🚀 ~ MainPage ~ rankings:", rankings, recentQuizzes);
 
-  const goToLessonPage = (courseId) => {
-    setCurrentLessonId(courseId);
+  const goToLessonPage = (course_id) => {
+    setCurrentLessonId(course_id);
     navigate(`/lesson`);
   };
 

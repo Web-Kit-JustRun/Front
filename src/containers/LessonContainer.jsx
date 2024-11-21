@@ -35,14 +35,14 @@ const LessonContainer = () => {
         // 과제 목록 API 호출
         const assignmentsResponse = await axios.get(
           process.env.REACT_APP_HOST_URL + `/api/courses/1/assignments`,
-          { headers: { Authorization: `Bearer ${authToken}` } }
+          { headers: { Authorization: `Bearer ${authToken}` } },
         );
         setAssignments(assignmentsResponse.data.slice(0, 3));
 
         // 퀴즈 리스트 API 호출
         const quizzesResponse = await axios.get(
           process.env.REACT_APP_HOST_URL + `/api/courses/1/quizzes`,
-          { headers: { Authorization: `Bearer ${authToken}` } }
+          { headers: { Authorization: `Bearer ${authToken}` } },
         );
         setQuizzes(quizzesResponse.data.slice(0, 3));
       } catch (error) {
@@ -51,7 +51,7 @@ const LessonContainer = () => {
     };
 
     fetchData();
-  }, [authToken, userData.user_id]);
+  }, [authToken, userData.userId]);
 
   return (
     <LessonBlock>

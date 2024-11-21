@@ -17,7 +17,7 @@ const MyQuizContainer = () => {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             },
-          }
+          },
         );
         if (response.status === 200) {
           setQuizzes(response.data);

@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import LoginComponent from "../../components/Login/LoginComponent";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
@@ -74,7 +74,7 @@ const LoginContainer = () => {
           {
             username: userId,
             password: userPw,
-          }
+          },
         );
 
         // 성공적으로 응답을 받으면 토큰과 사용자 정보를 로컬 스토리지에 저장
@@ -86,6 +86,11 @@ const LoginContainer = () => {
         navigate("/main");
       } catch (error) {
         // 로그인 실패 시 에러 메시지 표시
+        if (error instanceof AxiosError) {
+          if (error.status === 401) {
+            return alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+          }
+        }
         console.error("로그인 실패:", error);
         setIdError(true);
         setPwError(true);

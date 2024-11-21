@@ -34,6 +34,7 @@ const LoginComponent = (props) => {
                 eMsgContent={idError ? "아이디를 입력해 주세요" : ""}
                 onChange={handleIdChange}
                 value={userId}
+                inputTitle={"아이디를 입력해주세요"}
               />
             </InputWrapper>
             <InputWrapper>
@@ -44,9 +45,19 @@ const LoginComponent = (props) => {
                 eMsgContent={pwError ? "비밀번호를 입력해 주세요" : ""}
                 onChange={handlePwChange}
                 value={userPw}
+                inputTitle={"비밀번호를 입력해주세요"}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    handleFormSubmit();
+                  }
+                }}
               />
             </InputWrapper>
             <ActionButton onClick={handleFormSubmit}>로그인</ActionButton>
+            <ActionButton onClick={() => handleNavigate("/register")}>
+              회원가입
+            </ActionButton>
+
             <ActionGroup>
               <ActionItem onClick={() => handleNavigate("/searchid")}>
                 아이디 찾기

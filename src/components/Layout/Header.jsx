@@ -20,7 +20,8 @@ const Header = () => {
       try {
         const response = await axios.get(
           process.env.REACT_APP_HOST_URL +
-            `/api/users/${userData.user_id}/courses`
+            `/api/users/${userData.user.userId}/courses`,
+          { headers: { Authorization: `Bearer ${userData.token}` } },
         );
         setLessons(response.data);
       } catch (error) {
@@ -28,7 +29,7 @@ const Header = () => {
       }
     };
     fetchCourses();
-  }, [setCurrentLessonId, setLessons, userData.user_id]);
+  }, [setCurrentLessonId, setLessons, userData.token, userData.user.userId]);
 
   const handleClassChange = (e) => {
     const lessonId = e.target.value;
@@ -62,7 +63,7 @@ const Header = () => {
         <UserInfo>
           <div>{userData.user.username}</div>
           <RankingPoints onClick={() => navigate("/rank")}>
-            랭킹 점수: {userData.user.ranking_points}
+            랭킹 점수: {userData.user.rankingPoints}
           </RankingPoints>
         </UserInfo>
         <StoreIcon onClick={() => navigate("/store")}>

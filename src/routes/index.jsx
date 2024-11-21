@@ -8,12 +8,12 @@ import Lecture from "../pages/Lecture";
 import Store from "../pages/Store";
 import Lesson from "../pages/Lesson";
 import PurchaseList from "../pages/PurchaseList";
-import AssignmentBoard from "../pages/AssignmentBoard";
+import AssignmentBoard from "../pages/Assignment/AssignmentBoard";
+import AssignmentSubmitBoard from "../pages/Assignment/AssignmentSubmitBoard";
 import CreateQuizContainer from "../containers/Quiz/CreateQuizContainer";
-import QuizBoard from "../containers/Quiz/QuizBoardContainer";
-import { elements } from "chart.js";
 import SolveQuiz from "../pages/Quiz/SolveQuiz";
 import MyQuiz from "../pages/Quiz/MyQuiz";
+import QuizBoard from "../containers/QuizBoardContainer";
 
 // 기본 틀임. 로그인 회원가입은 고정된 레이아웃이 없을거라 여기(사실 역할별로 나눈거)
 const publicRoutes = [
@@ -45,6 +45,11 @@ const authenticatedRoutes = [
   { path: "/solvequiz", element: <SolveQuiz />, layoutType: "lesson" },
   { path: "/myquiz", element: <MyQuiz />, layoutType: "lesson" },
   { path: "/assignments", element: <AssignmentBoard />, layoutType: "lesson" },
+  {
+    path: "/assignments/submit/:id",
+    element: <AssignmentSubmitBoard />,
+    layoutType: "lesson",
+  },
 ];
 
 export { publicRoutes, authenticatedRoutes };
