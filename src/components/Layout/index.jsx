@@ -7,7 +7,7 @@ import { currentLessonIdStore, lessonStore } from "../../store/lessonStore";
 
 const Layout = ({ children, layoutType }) => {
   // const { course_id } = useParams();
-  // const [courseName, setCourseName] = useState("Loading...");
+  // const [course_name, setCourseName] = useState("Loading...");
 
   const lessons = useRecoilValue(lessonStore);
   const currentLessonId = useRecoilValue(currentLessonIdStore);
@@ -43,8 +43,8 @@ const Layout = ({ children, layoutType }) => {
       <ContentWrapper>
         {layoutType === "lesson" && (
           <NavBar>
-            <Navbar courseName={currentLesson?.course_name ?? "강의"} />{" "}
-            {/* courseName 전달 */}
+            <Navbar course_name={currentLesson?.course_name ?? "강의"} />{" "}
+            {/* course_name 전달 */}
           </NavBar>
         )}
         {(layoutType === "store" || layoutType === "purchaseList") && (

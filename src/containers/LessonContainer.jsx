@@ -51,7 +51,7 @@ const LessonContainer = () => {
     };
 
     fetchData();
-  }, [authToken, userData.user_id]);
+  }, [authToken, userData.userId]);
 
   return (
     <LessonBlock>

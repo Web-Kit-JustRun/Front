@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegisterComponent from "../../components/Login/RegisterComponent";
+import axios, { AxiosError } from "axios";
 
 const RegisterContainer = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const RegisterContainer = () => {
   const handleEmailDomainChange = (e) => setEmailDomain(e.target.value);
 
   // 폼 제출 처리 함수
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
     const fullEmail = `${userEmail}@${emailDomain}`;
 
     // 각 필드에 대한 에러 상태 업데이트
@@ -41,6 +42,24 @@ const RegisterContainer = () => {
 
     // 모든 입력값이 유효할 경우 회원가입 완료
     if (userId && userPw && userPw === userPw2 && userName && userEmail) {
+      try {
+        await axios.post(
+          process.env.REACT_APP_HOST_URL + "/api/auth/register",
+          {
+            username: userId,
+            password: userPw,
+            name: userName,
+            email: fullEmail,
+          },
+        );
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          if (error.status === 409) {
+            return alert("아이디 또는 이메일이 중복되었습니다.");
+          }
+          alert(`오류 발생: ${error.message}`);
+        }
+      }
       alert("회원가입이 완료되었습니다!");
       navigate("/login");
     }

@@ -19,7 +19,7 @@ const StoreContainer = () => {
   const { token: authToken, user: userData } = userState;
   // 아이템별 수량 관리
   const [quantities, setQuantities] = useState({});
-  const { user_id } = userData;
+  const { userId } = userData;
   console.log("selectedMenu:", selectedMenu); // 상태 확인
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const StoreContainer = () => {
     const fetchRewardData = async () => {
       try {
         const response = await axios.get(
-          process.env.REACT_APP_HOST_URL + `/api/users/${user_id}/rewards`,
+          process.env.REACT_APP_HOST_URL + `/api/users/${userId}/rewards`,
         );
         if (response.status === 200) {
           setRewardPoints(response.data.reward_points);
@@ -63,7 +63,7 @@ const StoreContainer = () => {
     };
 
     fetchRewardData();
-  }, [user_id]);
+  }, [userId]);
 
   // 선택된 메뉴에 따른 아이템 필터링
   const filteredItems = selectedMenu

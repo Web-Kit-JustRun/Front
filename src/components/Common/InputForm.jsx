@@ -8,6 +8,7 @@ const InputForm = ({
   onChange,
   value,
   type = "text",
+  onKeyDown,
 }) => {
   return (
     <InputFormBlock $eMsgColor={eMsgColor}>
@@ -17,6 +18,7 @@ const InputForm = ({
         value={value}
         onChange={onChange}
         placeholder={inputTitle}
+        onKeyDown={onKeyDown}
       />
       <label className="errorMsg">{eMsgContent || " "}</label>
     </InputFormBlock>
