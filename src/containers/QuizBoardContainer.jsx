@@ -2,31 +2,31 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import { currentLessonIdStore } from "../store/lessonStore";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useRequest } from "../utils/useRequest";
 
 const QuizBoard = () => {
   const [quizzes, setQuizzes] = useState([]);
   const currentLessonId = useRecoilValue(currentLessonIdStore);
   const navigate = useNavigate();
+  const request = useRequest();
 
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const response = await axios.get(
-          process.env.REACT_APP_HOST_URL +
-            `/api/courses/${currentLessonId}/quizzes/list`,
+        const data = await request(
+          `/api/courses/${currentLessonId}/quizzes/list`,
+          "GET",
         );
-        if (response.status === 200) {
-          setQuizzes(response.data);
-        }
+
+        data && setQuizzes(data);
       } catch (error) {
         console.error("Error fetching quizzes:", error);
       }
     };
 
     fetchQuizzes();
-  }, [currentLessonId]);
+  }, [currentLessonId, request]);
 
   const handleCreate = () => {
     navigate("/createquiz");

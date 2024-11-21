@@ -6,34 +6,12 @@ import { useRecoilValue } from "recoil";
 import { currentLessonIdStore, lessonStore } from "../../store/lessonStore";
 
 const Layout = ({ children, layoutType }) => {
-  // const { course_id } = useParams();
-  // const [course_name, setCourseName] = useState("Loading...");
-
   const lessons = useRecoilValue(lessonStore);
   const currentLessonId = useRecoilValue(currentLessonIdStore);
 
   const currentLesson = lessons.find(
     (lesson) => lesson.course_id === currentLessonId,
   );
-
-  // useEffect(() => {
-  //   const fetchCourseName = async () => {
-  //     if (course_id) {
-  //       const authToken = localStorage.getItem("authToken");
-  //       try {
-  //         const response = await axios.get(
-  //           `http://localhost:8080/api/courses/${course_id}`,
-  //           { headers: { Authorization: `Bearer ${authToken}` } }
-  //         );
-  //         console.log("Fetched course name:", response.data.course_name); // 응답 데이터 확인
-  //         setCourseName(response.data.course_name); // API 응답이 비어 있을 때 대비
-  //       } catch (error) {
-  //         console.error("Course name fetch failed:", error);
-  //       }
-  //     }
-  //   };
-  //   fetchCourseName();
-  // }, [course_id]);
 
   return (
     <LayoutWrapper>

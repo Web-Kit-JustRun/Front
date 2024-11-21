@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { FaStore } from "react-icons/fa";
 import logo from "../../img/edukit logo.png";
 import { useEffect } from "react";
-import axios from "axios";
 import { useRecoilState } from "recoil";
 import { currentLessonIdStore, lessonStore } from "../../store/lessonStore";
 import { userStore } from "../../store/userStore";
+import { useRequest } from "../../utils/useRequest";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -14,22 +14,23 @@ const Header = () => {
   const [currentLessonId, setCurrentLessonId] =
     useRecoilState(currentLessonIdStore);
   const [userData, setUserData] = useRecoilState(userStore);
+  const request = useRequest();
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(
-          process.env.REACT_APP_HOST_URL +
-            `/api/users/${userData.user.userId}/courses`,
-          { headers: { Authorization: `Bearer ${userData.token}` } },
+        const data = await request(
+          `/api/users/${userData.user.userId}/courses`,
+          "GET",
         );
-        setLessons(response.data);
+
+        data && setLessons(data);
       } catch (error) {
         console.error("수업 정보를 가져오는 데 실패했습니다:", error);
       }
     };
     fetchCourses();
-  }, [setCurrentLessonId, setLessons, userData.token, userData.user.userId]);
+  }, [request, setLessons, userData.user.userId]);
 
   const handleClassChange = (e) => {
     const lessonId = e.target.value;
@@ -61,10 +62,14 @@ const Header = () => {
         </ClassSelect>
 
         <UserInfo>
-          <UserId onClick={() => {
-          setCurrentLessonId("");
-          navigate("/mypage");
-        }}>{userData.user.username}</UserId>
+          <UserId
+            onClick={() => {
+              setCurrentLessonId("");
+              navigate("/mypage");
+            }}
+          >
+            {userData.user.username}
+          </UserId>
           <RankingPoints onClick={() => navigate("/rank")}>
             랭킹 점수: {userData.user.rankingPoints}
           </RankingPoints>

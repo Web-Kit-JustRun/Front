@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { currentLessonIdStore } from "../store/lessonStore";
-import axios from "axios";
 import { userStore } from "../store/userStore";
 import styled from "styled-components";
 
