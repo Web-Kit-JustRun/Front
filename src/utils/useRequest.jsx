@@ -15,7 +15,7 @@ export function useRequest() {
         let props;
         let config = {
           ...options,
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { ...options.headers, Authorization: `Bearer ${token}` },
         };
         switch (parsedMethod) {
           case "post":
