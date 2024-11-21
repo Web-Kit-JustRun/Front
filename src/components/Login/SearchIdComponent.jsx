@@ -40,8 +40,8 @@ const SearchIdComponent = (props) => {
           </ButtonContainer>
           <EmailForm>
             <InputWrapper>
-              <Label>이메일</Label>
               <InputForm
+                title={"이메일"}
                 eMsgColor={emailError ? "red" : "white"}
                 eMsgContent={emailError ? "이메일을 입력해 주세요" : ""}
                 onChange={handleEmailChange}

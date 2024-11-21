@@ -41,39 +41,37 @@ const SearchPwComponent = (props) => {
               비밀번호 찾기
             </StyledButton>
           </ButtonContainer>
-          <InputWrapper>
-            <Label>아이디</Label>
-            <InputForm
-              eMsgColor={idError ? "red" : "white"}
-              eMsgContent={idError ? "아이디를 입력해 주세요" : ""}
-              onChange={handleIdChange}
-              value={userId}
-            />
-          </InputWrapper>
+
+          <InputForm
+            title={"아이디"}
+            eMsgColor={idError ? "red" : "white"}
+            eMsgContent={idError ? "아이디를 입력해 주세요" : ""}
+            onChange={handleIdChange}
+            value={userId}
+          />
+
           <EmailForm>
-            <InputWrapper>
-              <Label>이메일</Label>
-              <InputForm
-                eMsgColor={emailError ? "red" : "white"}
-                eMsgContent={emailError ? "이메일을 입력해 주세요" : ""}
-                onChange={handleEmailChange}
-                value={userEmail}
-              />
-            </InputWrapper>
+            <InputForm
+              title={"이메일"}
+              eMsgColor={emailError ? "red" : "white"}
+              eMsgContent={emailError ? "이메일을 입력해 주세요" : ""}
+              onChange={handleEmailChange}
+              value={userEmail}
+            />
+
             <AtSymbol>@</AtSymbol>
-            <InputWrapper>
-              <EmailSelectWrapper>
-                <EmailSelect
-                  value={emailDomain}
-                  onChange={handleEmailDomainChange}
-                >
-                  <option value="gmail.com">gmail.com</option>
-                  <option value="naver.com">naver.com</option>
-                  <option value="hanmail.net">hanmail.net</option>
-                  <option value="custom">직접 입력</option>
-                </EmailSelect>
-              </EmailSelectWrapper>
-            </InputWrapper>
+
+            <EmailSelectWrapper>
+              <EmailSelect
+                value={emailDomain}
+                onChange={handleEmailDomainChange}
+              >
+                <option value="gmail.com">gmail.com</option>
+                <option value="naver.com">naver.com</option>
+                <option value="hanmail.net">hanmail.net</option>
+                <option value="custom">직접 입력</option>
+              </EmailSelect>
+            </EmailSelectWrapper>
           </EmailForm>
           <ActionButton onClick={handleFormSubmit}>확인</ActionButton>
           <CancelButton onClick={() => handleNavigate("/login")}>

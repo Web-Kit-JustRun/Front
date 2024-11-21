@@ -28,8 +28,8 @@ const LoginComponent = (props) => {
           <h1>로그인</h1>
           <Form>
             <InputWrapper>
-              <Label>아이디</Label>
               <InputForm
+                title={"아이디"}
                 eMsgColor={idError ? "red" : "white"}
                 eMsgContent={idError ? "아이디를 입력해 주세요" : ""}
                 onChange={handleIdChange}
@@ -37,8 +37,8 @@ const LoginComponent = (props) => {
               />
             </InputWrapper>
             <InputWrapper>
-              <Label>비밀번호</Label>
               <InputForm
+                title={"비밀번호"}
                 type="password"
                 eMsgColor={pwError ? "red" : "white"}
                 eMsgContent={pwError ? "비밀번호를 입력해 주세요" : ""}
