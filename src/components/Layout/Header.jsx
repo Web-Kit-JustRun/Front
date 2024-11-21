@@ -61,7 +61,10 @@ const Header = () => {
         </ClassSelect>
 
         <UserInfo>
-          <div>{userData.user.username}</div>
+          <UserId onClick={() => {
+          setCurrentLessonId("");
+          navigate("/mypage");
+        }}>{userData.user.username}</UserId>
           <RankingPoints onClick={() => navigate("/rank")}>
             랭킹 점수: {userData.user.rankingPoints}
           </RankingPoints>
@@ -127,6 +130,15 @@ const UserInfo = styled.div`
   }
 `;
 
+const UserId = styled.div`
+  cursor: pointer;
+  font-size: 0.9em;
+  color: #333;
+
+  &:hover {
+    color: #007bff;
+  }
+`;
 const RankingPoints = styled.div`
   cursor: pointer;
   font-size: 0.9em;
