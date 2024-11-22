@@ -33,8 +33,6 @@ export default function AssignmentBoard() {
     fetchLessonDetail();
   }, [currentLessonId, request, token]);
 
-  console.log(assignments);
-
   if (error)
     return (
       <Layout>

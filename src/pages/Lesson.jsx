@@ -3,7 +3,7 @@ import styled from "styled-components";
 import LessonContainer from "../containers/LessonContainer";
 
 const Lesson = () => {
-  // const { course_id } = useParams();
+  // const { courseId } = useParams();
 
   return (
     <LessonPageBlock>

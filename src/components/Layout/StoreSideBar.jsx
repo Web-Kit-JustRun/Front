@@ -19,7 +19,7 @@ const StoreSideBar = ({ layoutType }) => {
     const fetchRewardPoints = async () => {
       try {
         const data = await request(`/api/users/${userId}/rewards`, "GET");
-        setRewardPoints(data.reward_points);
+        setRewardPoints(data.rewardPoints);
       } catch (error) {
         console.error("Error fetching reward points:", error);
         setRewardPoints("N/A"); // 오류 시 기본값 설정

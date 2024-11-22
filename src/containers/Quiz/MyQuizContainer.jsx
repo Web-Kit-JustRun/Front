@@ -6,12 +6,12 @@ const MyQuizContainer = () => {
   const navigate = useNavigate();
   const request = useRequest();
   const [quizzes, setQuizzes] = useState([]);
-  const course_id = 1;
+  const courseId = 1;
 
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const data = await request(`/api/courses/${course_id}/quizzes`, "GET");
+        const data = await request(`/api/courses/${courseId}/quizzes`, "GET");
         data && setQuizzes(data); // 데이터를 상태로 저장
       } catch (error) {
         console.error("퀴즈 데이터를 불러오는 중 오류 발생:", error);
@@ -44,8 +44,8 @@ const MyQuizContainer = () => {
           </thead>
           <tbody>
             {quizzes.map((quiz) => (
-              <TableRow key={quiz.quiz_id} onClick={() => handleRowClick(quiz)}>
-                <TableCell>{quiz.quiz_id}</TableCell>
+              <TableRow key={quiz.quizId} onClick={() => handleRowClick(quiz)}>
+                <TableCell>{quiz.quizId}</TableCell>
                 <TableCell>{quiz.title}</TableCell>
                 <TableCell>
                   <StatusButton status={quiz.status}>

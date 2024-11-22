@@ -7,8 +7,8 @@ import { userStore } from "../store/userStore";
 import { useRequest } from "../utils/useRequest";
 
 const RankContainer = () => {
-  const [top_100, set_Top100] = useState([]);
-  const [user_rank, setUser_rank] = useState(null);
+  const [top100, setTop100] = useState([]);
+  const [userRank, setUserRank] = useState(null);
   const [showTooltip, setShowTooltip] = useState(false);
 
   const userData = useRecoilValue(userStore);
@@ -29,11 +29,10 @@ const RankContainer = () => {
           userRankingPromise,
         ]);
         if (topRankingResult.status === "fulfilled") {
-          set_Top100(topRankingResult.value);
+          setTop100(topRankingResult.value);
         }
         if (userRankingResult.status === "fulfilled") {
-          console.log(userRankingResult.value);
-          setUser_rank(userRankingResult.value);
+          setUserRank(userRankingResult.value);
         }
       } catch (error) {
         console.error("Error fetching ranking data:", error);
@@ -55,11 +54,11 @@ const RankContainer = () => {
           {showTooltip && <Tooltip>랭크는 매 학기마다 초기화 됩니다.</Tooltip>}
         </InfoIcon>
       </TitleContainer>
-      {user_rank && (
+      {userRank && (
         <MyRank>
-          <RankCell>상위 {user_rank.ranking_percentage}%</RankCell>
+          <RankCell>상위 {userRank.rankingPercentage}%</RankCell>
           <RankCell>{userData.user.name}</RankCell>
-          <RankCell>{user_rank.ranking_points} points</RankCell>
+          <RankCell>{userRank.rankingPoints} points</RankCell>
         </MyRank>
       )}
       <ScrollableContainer>
@@ -72,7 +71,7 @@ const RankContainer = () => {
             </RankHeader>
           </thead>
           <tbody>
-            {top_100.map((user) => (
+            {top100.map((user) => (
               <RankRow key={user.rank}>
                 <RankCell>{user.rank}</RankCell>
                 <RankCell>{user.name}</RankCell>
