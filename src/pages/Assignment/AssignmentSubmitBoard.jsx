@@ -14,10 +14,7 @@ export default function AssignmentSubmitBoard() {
     async function fetchAssignmentDetail() {
       const assignmentId = params.id;
 
-      const data = await request(
-        process.env.REACT_APP_HOST_URL + `/api/assignments/${assignmentId}`,
-        "GET",
-      );
+      const data = await request(`/api/assignments/${assignmentId}`, "GET");
 
       setAssignmentDetail(data);
     }
@@ -114,12 +111,30 @@ export default function AssignmentSubmitBoard() {
           </FileUploadButton>
         )}
       </FileUploadBox>
-      <p>
-        제출 마감일: {new Date(assignmentDetail.dueDate).toLocaleDateString()}
-      </p>
+      <SubmitMenu>
+        <p>
+          제출 마감일: {new Date(assignmentDetail.dueDate).toLocaleDateString()}
+        </p>
+        <SubmitButton>제출하기</SubmitButton>
+      </SubmitMenu>
     </div>
   );
 }
+
+const SubmitButton = styled.button`
+  background: orange;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  color: white;
+`;
+
+const SubmitMenu = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+`;
 
 const FileUploadBox = styled.div`
   & > input[type="file"] {
@@ -128,7 +143,6 @@ const FileUploadBox = styled.div`
 
   background: #ededed;
   padding: 0 10px;
-  width: 100%;
   height: fit-content;
   min-height: 50px;
   display: flex;
