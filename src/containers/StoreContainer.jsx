@@ -51,7 +51,7 @@ const StoreContainer = () => {
       try {
         const data = await request(`/api/users/${userId}/rewards`, "GET");
 
-        data && setRewardPoints(data.reward_points);
+        data && setRewardPoints(data.rewardPoints);
       } catch (error) {
         console.error("Error fetching reward data:", error);
       }

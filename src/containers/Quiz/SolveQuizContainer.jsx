@@ -14,11 +14,11 @@ const SolveQuizContainer = () => {
     <SolveQuizContainerBlock>
       <div>
         <h1>퀴즈 풀기</h1>
-        <p>문제 ID: {quiz.quiz_id}</p>
-        <p>과정 이름: {quiz.course_name}</p>
+        <p>문제 ID: {quiz.quizId}</p>
+        <p>과정 이름: {quiz.courseName}</p>
         <p>제목: {quiz.title}</p>
         <p>
-          생성 날짜: {new Date(quiz.creation_date).toLocaleDateString("ko-KR")}
+          생성 날짜: {new Date(quiz.creationDate).toLocaleDateString("ko-KR")}
         </p>
       </div>
     </SolveQuizContainerBlock>

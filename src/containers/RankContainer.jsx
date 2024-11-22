@@ -57,7 +57,7 @@ const RankContainer = () => {
       {userRank && (
         <MyRank>
           <RankCell>상위 {userRank.rankingPercentage}%</RankCell>
-          <RankCell>{userRank.name}</RankCell>
+          <RankCell>{userData.user.name}</RankCell>
           <RankCell>{userRank.rankingPoints} points</RankCell>
         </MyRank>
       )}
