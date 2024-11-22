@@ -1,15 +1,17 @@
 /* eslint-disable no-use-before-define */
 import { useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import LoginComponent from "../../components/Login/LoginComponent";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { userStore } from "../../store/userStore";
+import { useRequest } from "../../utils/useRequest";
 
 //필요한 변수 선언, 함수 정의 등등 처리 후 propDatas로 컴포넌트파일에 넘긴다
 const LoginContainer = () => {
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userStore);
+  const request = useRequest();
 
   // 보통은 useState사용해서 변수 선언
   // const [id, setId] = useState("");
@@ -69,16 +71,13 @@ const LoginContainer = () => {
     if (userId !== "" && userPw !== "") {
       try {
         // 서버에 로그인 요청
-        const response = await axios.post(
-          process.env.REACT_APP_HOST_URL + "/api/auth/login",
-          {
-            username: userId,
-            password: userPw,
-          },
-        );
+        const data = await request("/api/auth/login", "POST", {
+          username: userId,
+          password: userPw,
+        });
 
         // 성공적으로 응답을 받으면 토큰과 사용자 정보를 로컬 스토리지에 저장
-        const { token, user } = response.data;
+        const { token, user } = data;
 
         setUser({ token, user });
 

@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,6 +6,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userStore } from "../store/userStore";
 import { selectedMenuState } from "../store/selectedMenuStore"; // Recoil 상태
+import { useRequest } from "../utils/useRequest";
 
 // 아이콘 라이브러리에 아이콘 추가
 library.add(faTicket);
@@ -16,54 +16,49 @@ const StoreContainer = () => {
   const [rewardPoints, setRewardPoints] = useState("");
   const [selectedMenu, setSelectedMenu] = useRecoilState(selectedMenuState);
   const userState = useRecoilValue(userStore);
-  const { token: authToken, user: userData } = userState;
+  const { user: userData } = userState;
   // 아이템별 수량 관리
   const [quantities, setQuantities] = useState({});
   const { userId } = userData;
+  const request = useRequest();
   console.log("selectedMenu:", selectedMenu); // 상태 확인
 
   useEffect(() => {
-    const resetMenu = () => {
-      setSelectedMenu("");
-    };
-    resetMenu();
-  }, []);
+    // const resetMenu = () => {
+    setSelectedMenu("");
+    // };
+    // resetMenu();
+  }, [setSelectedMenu]);
 
   // 아이템 목록 조회
   useEffect(() => {
     const fetchItemData = async () => {
       try {
-        const response = await axios.get(
-          process.env.REACT_APP_HOST_URL + "/api/store/items",
-        );
-        if (response.status === 200) {
-          setItems(response.data);
-        }
+        const data = await request("/api/store/items", "GET");
+
+        data && setItems(data);
       } catch (error) {
         console.error("Error fetching item data:", error);
       }
     };
 
     fetchItemData();
-  }, []);
+  }, [request]);
 
   // 리워드 조회
   useEffect(() => {
     const fetchRewardData = async () => {
       try {
-        const response = await axios.get(
-          process.env.REACT_APP_HOST_URL + `/api/users/${userId}/rewards`,
-        );
-        if (response.status === 200) {
-          setRewardPoints(response.data.reward_points);
-        }
+        const data = await request(`/api/users/${userId}/rewards`, "GET");
+
+        data && setRewardPoints(data.reward_points);
       } catch (error) {
         console.error("Error fetching reward data:", error);
       }
     };
 
     fetchRewardData();
-  }, [userId]);
+  }, [request, userId]);
 
   // 선택된 메뉴에 따른 아이템 필터링
   const filteredItems = selectedMenu
@@ -84,25 +79,17 @@ const StoreContainer = () => {
 
     if (rewardPoints >= item.price * quantity) {
       try {
-        const response = await axios.post(
-          `/api/store/items/${item.item_id}/purchase`,
-          { headers: { Authorization: `Bearer ${authToken}` } },
-          {
-            purchase_id: item.item_id,
-            price: item.price,
-            quantity: quantity, // 수량 포함
-          },
-        );
+        await request(`/api/store/items/${item.item_id}/purchase`, "POST", {
+          purchase_id: item.item_id,
+          price: item.price,
+          quantity: quantity, // 수량 포함
+        });
 
-        if (response.status === 200) {
-          alert(
-            `"${item.item_name}"을(를) ${
-              item.price * quantity
-            } 포인트에 구매했습니다!`,
-          );
-        } else {
-          alert("구매 요청이 완료되지 않았습니다. 다시 시도해주세요.");
-        }
+        alert(
+          `"${item.item_name}"을(를) ${
+            item.price * quantity
+          } 포인트에 구매했습니다!`,
+        );
       } catch (error) {
         console.error("Error during purchase:", error);
         alert("구매 중 오류가 발생했습니다. 다시 시도해주세요.");

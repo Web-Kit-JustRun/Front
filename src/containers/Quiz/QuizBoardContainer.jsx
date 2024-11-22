@@ -1,34 +1,27 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useRequest } from "../../utils/useRequest";
 
 const MyQuizContainer = () => {
   const navigate = useNavigate();
+  const request = useRequest();
   const [quizzes, setQuizzes] = useState([]);
   const course_id = 1;
 
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const response = await axios.get(
-          process.env.REACT_APP_HOST_URL + `/api/courses/${course_id}/quizzes`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-          },
-        );
-        if (response.status === 200) {
-          setQuizzes(response.data);
-        }
+        const data = await request(`/api/courses/${course_id}/quizzes`, "GET");
+
+        data && setQuizzes(data);
       } catch (error) {
         console.error("퀴즈 데이터를 불러오는 중 오류 발생:", error);
       }
     };
 
     fetchQuizzes();
-  }, []);
+  }, [request]);
 
   const handleRowClick = (quiz) => {
     navigate("/solvequiz", { state: { quiz } });

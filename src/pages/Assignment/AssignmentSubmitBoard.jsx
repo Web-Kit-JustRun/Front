@@ -1,30 +1,29 @@
-import { useRecoilValue } from "recoil";
-import { userStore } from "../../store/userStore";
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import styled from "styled-components";
+import { useRequest } from "../../utils/useRequest";
 
 export default function AssignmentSubmitBoard() {
-  const user = useRecoilValue(userStore);
   const [assignmentDetail, setAssignmentDetail] = useState(null);
   const params = useParams();
   const fileInputRef = useRef();
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const request = useRequest();
 
   useEffect(() => {
     async function fetchAssignmentDetail() {
       const assignmentId = params.id;
 
-      const result = await axios.get(
+      const data = await request(
         process.env.REACT_APP_HOST_URL + `/api/assignments/${assignmentId}`,
+        "GET",
       );
 
-      setAssignmentDetail(result.data);
+      setAssignmentDetail(data);
     }
 
     fetchAssignmentDetail();
-  }, [params.id]);
+  }, [params.id, request]);
 
   if (!assignmentDetail) return null;
 
@@ -116,7 +115,7 @@ export default function AssignmentSubmitBoard() {
         )}
       </FileUploadBox>
       <p>
-        제출 마감일: {new Date(assignmentDetail.due_date).toLocaleDateString()}
+        제출 마감일: {new Date(assignmentDetail.dueDate).toLocaleDateString()}
       </p>
     </div>
   );

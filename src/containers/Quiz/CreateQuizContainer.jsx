@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userStore } from "../../store/userStore";
 import { currentLessonIdStore } from "../../store/lessonStore";
+import { useRequest } from "../../utils/useRequest";
 
 const CreateQuizContainer = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const CreateQuizContainer = () => {
   const [correctChoice, setCorrectChoice] = useState(null);
   const userData = useRecoilValue(userStore);
   const currentLessonId = useRecoilValue(currentLessonIdStore);
-
+  const request = useRequest();
   const handleChoiceChange = (index, value) => {
     const updatedChoices = [...choices];
     updatedChoices[index] = value;
@@ -34,8 +34,9 @@ const CreateQuizContainer = () => {
     }
 
     try {
-      const response = await axios.post(
-        `http://localhost:8080/api/courses/${currentLessonId}/quizzes`,
+      const response = await request(
+        `/api/courses/${currentLessonId}/quizzes`,
+        "POST",
         {
           title: title,
           question: question,
@@ -47,7 +48,7 @@ const CreateQuizContainer = () => {
             Authorization: `Bearer ${userData.token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       if (response.status === 201) {

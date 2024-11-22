@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { selectedMenuState } from "../../store/selectedMenuStore";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userStore } from "../../store/userStore";
-import axios from "axios";
+import { useRequest } from "../../utils/useRequest";
 
 const StoreSideBar = ({ layoutType }) => {
   const navigate = useNavigate();
@@ -12,17 +12,14 @@ const StoreSideBar = ({ layoutType }) => {
   const userData = useRecoilValue(userStore).user; // 사용자 데이터 가져오기
   const { userId } = userData || {};
   const [rewardPoints, setRewardPoints] = useState(null); // 리워드 포인트 상태
+  const request = useRequest();
 
   // 리워드 포인트 가져오기
   useEffect(() => {
     const fetchRewardPoints = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_HOST_URL}/api/users/${userId}/rewards`,
-        );
-        if (response.status === 200) {
-          setRewardPoints(response.data.reward_points); // 리워드 포인트 설정
-        }
+        const data = await request(`/api/users/${userId}/rewards`, "GET");
+        setRewardPoints(data.reward_points);
       } catch (error) {
         console.error("Error fetching reward points:", error);
         setRewardPoints("N/A"); // 오류 시 기본값 설정
@@ -32,7 +29,7 @@ const StoreSideBar = ({ layoutType }) => {
     if (userId) {
       fetchRewardPoints(); // 사용자 ID가 있을 경우 API 호출
     }
-  }, [userId]);
+  }, [request, userId]);
 
   // 메뉴 클릭 시 상태 업데이트
   const handleMenuClick = (menu) => {

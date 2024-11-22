@@ -2,37 +2,33 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTicket } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userStore } from "../store/userStore";
 import { selectedMenuState } from "../store/selectedMenuStore";
+import { useRequest } from "../utils/useRequest";
 
 const PurchaseListContainer = () => {
   const [items, setItems] = useState([]); // 전체 구매 목록
   const userData = useRecoilValue(userStore).user;
   const { userId } = userData || {};
   const [selectedMenu, setSelectedMenu] = useRecoilState(selectedMenuState); // 선택된 메뉴
-
+  const request = useRequest();
   // 구매 아이템 목록 조회
   useEffect(() => {
     setSelectedMenu("");
     const fetchItems = async () => {
       try {
-        const response = await axios.get(
-          process.env.REACT_APP_HOST_URL + `/api/users/${userId}/purchases`,
-        );
+        const data = await request(`/api/users/${userId}/purchases`, "GET");
 
-        if (response.status === 200) {
-          setItems(response.data); // 전체 데이터를 상태에 저장
-          console.log("🚀 ~ fetchItems ~ response.data:", response.data);
-        }
+        data && setItems(data);
+        console.log("🚀 ~ fetchItems ~ data:", data);
       } catch (error) {
         console.error("Error fetching item data:", error);
       }
     };
 
     fetchItems();
-  }, [userId]); // userId 변경 시만 요청
+  }, [request, setSelectedMenu, userId]); // userId 변경 시만 요청
 
   // selectedMenu로 아이템 필터링
   const filteredItems = selectedMenu
