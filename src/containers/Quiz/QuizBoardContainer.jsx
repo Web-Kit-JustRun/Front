@@ -7,12 +7,12 @@ const MyQuizContainer = () => {
   const navigate = useNavigate();
   const request = useRequest();
   const [quizzes, setQuizzes] = useState([]);
-  const course_id = 1;
+  const courseId = 1;
 
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const data = await request(`/api/courses/${course_id}/quizzes`, "GET");
+        const data = await request(`/api/courses/${courseId}/quizzes`, "GET");
 
         data && setQuizzes(data);
       } catch (error) {
@@ -71,13 +71,13 @@ const MyQuizContainer = () => {
             <tbody>
               {quizzes.map((quiz) => (
                 <TableRow
-                  key={quiz.quiz_id}
+                  key={quiz.quizId}
                   onClick={() => handleRowClick(quiz)}
                 >
-                  <TableCell>{quiz.quiz_id}</TableCell>
+                  <TableCell>{quiz.quizId}</TableCell>
                   <TableCell>{quiz.title}</TableCell>
                   <TableCell>
-                    {new Date(quiz.creation_date).toLocaleDateString("ko-KR")}
+                    {new Date(quiz.creationDate).toLocaleDateString("ko-KR")}
                   </TableCell>
                   <TableCell>
                     {getAttemptStatusLabel(quiz.attempt_status)}

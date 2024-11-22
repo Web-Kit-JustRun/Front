@@ -30,9 +30,9 @@ const LessonContainer = () => {
 
         // 더미 강의자료 설정
         setLectures([
-          { course_id: 1, course_name: "데이터베이스 개론" },
-          { course_id: 2, course_name: "운영체제" },
-          { course_id: 3, course_name: "알고리즘 입문" },
+          { courseId: 1, courseName: "데이터베이스 개론" },
+          { courseId: 2, courseName: "운영체제" },
+          { courseId: 3, courseName: "알고리즘 입문" },
         ]);
 
         // 과제 목록 API 호출
@@ -99,8 +99,8 @@ const LessonContainer = () => {
             <Table>
               <tbody>
                 {lectures.map((lecture) => (
-                  <tr key={lecture.course_id}>
-                    <td>{lecture.course_name}</td>
+                  <tr key={lecture.courseId}>
+                    <td>{lecture.courseName}</td>
                   </tr>
                 ))}
               </tbody>
@@ -115,9 +115,9 @@ const LessonContainer = () => {
             <Table>
               <tbody>
                 {quizzes.map((quiz) => (
-                  <tr key={quiz.quiz_id}>
+                  <tr key={quiz.quizId}>
                     <td>{quiz.title}</td>
-                    <td>{new Date(quiz.creation_date).toLocaleDateString()}</td>
+                    <td>{new Date(quiz.creationDate).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>
