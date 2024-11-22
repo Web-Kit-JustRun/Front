@@ -22,7 +22,7 @@ const CreateQuizContainer = () => {
   };
 
   const handleSubmit = async () => {
-    // 유효성 검사 (선택 사항)
+    // 유효성 검사
     if (
       !title ||
       !question ||
@@ -32,34 +32,41 @@ const CreateQuizContainer = () => {
       alert("모든 필드를 올바르게 입력해주세요.");
       return;
     }
-
+  
     try {
-      const response = await request(
-        `/api/courses/${currentLessonId}/quizzes`,
+      // 응답 데이터만 반환된다고 가정
+      await request(
+        `/api/courses/${currentLessonId}/quizzes/add`,
         "POST",
         {
           title: title,
           question: question,
           choices: choices,
-          correct_choice: correctChoice,
+          correctChoice: correctChoice,
         },
         {
           headers: {
             Authorization: `Bearer ${userData.token}`,
             "Content-Type": "application/json",
           },
-        },
+        }
       );
-
-      if (response.status === 201) {
-        alert("퀴즈가 성공적으로 등록되었습니다.");
-        navigate("/myquiz"); // 등록 후 이동
-      }
+  
+      // 요청이 성공하면 이 부분이 실행됨
+      alert("퀴즈가 성공적으로 등록되었습니다.");
+      navigate("/myquiz"); // 등록 후 이동
     } catch (error) {
       console.error("Error submitting quiz:", error);
-      alert("퀴즈 등록 중 오류가 발생했습니다.");
+      if (error.response && error.response.data && error.response.data.message) {
+        // 서버가 응답한 에러 메시지 출력
+        alert(`퀴즈 등록 중 오류가 발생했습니다: ${error.response.data.message}`);
+      } else {
+        alert("퀴즈 등록 중 오류가 발생했습니다.");
+      }
     }
   };
+  
+  
 
   return (
     <QuizContainer>

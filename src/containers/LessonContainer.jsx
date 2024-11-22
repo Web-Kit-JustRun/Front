@@ -44,7 +44,7 @@ const LessonContainer = () => {
 
         // 퀴즈 리스트 API 호출
         const quizzesData = await request(
-          `/api/courses/${currentLessonId}/quizzes`,
+          `/api/courses/${currentLessonId}/quizzes/list`,
           "GET",
         );
         setQuizzes(quizzesData.slice(0, 3));

@@ -13,19 +13,19 @@ const QuizBoard = () => {
   const { user: userData } = userState;
   const navigate = useNavigate();
   const request = useRequest();
-  const courseId = 1;
 
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const data = await request(`/api/courses/${courseId}/quizzes`, "GET");
+        const data = await request(`/api/courses/${currentLessonId}/quizzes/list`, "GET");
 
         data && setQuizzes(data);
+    console.log(data)
+
       } catch (error) {
         console.error("Error fetching quizzes:", error);
       }
     };
-
     fetchQuizzes();
   }, [currentLessonId, request]);
 
@@ -62,7 +62,7 @@ const QuizBoard = () => {
           >
             등록하기
           </RegisterButton>
-          {userData.userType === "student" && (
+          {userData.userType === "professor" && (
             <QuizApprovalButton onClick={handleQuizApprovalClick}>
               퀴즈 허가 목록 조회
             </QuizApprovalButton>
