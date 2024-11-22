@@ -81,7 +81,7 @@ const ChangePwContainer = () => {
           </InputWrapper>
           {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
           <ActionButton onClick={handleSubmit}>비밀번호 변경</ActionButton>
-          <ActionButton onClick={() => navigate("/profile")}>
+          <ActionButton onClick={() => navigate("/mypage")}>
             취소
           </ActionButton>
         </Form>

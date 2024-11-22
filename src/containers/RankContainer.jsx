@@ -96,7 +96,7 @@ const RankContainerBlock = styled.div`
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   padding: 20px;
 `;
 
@@ -114,7 +114,7 @@ const Title = styled.h1`
 const InfoIcon = styled.div`
   position: relative;
   font-size: 1.5rem;
-  color: #555;
+  color: #007bff;
   cursor: pointer;
 
   &:hover {
@@ -146,7 +146,7 @@ const RankTable = styled.table`
 `;
 
 const RankHeader = styled.tr`
-  background-color: #333;
+  background-color: #007bff;
   color: white;
   font-weight: bold;
 `;
@@ -182,7 +182,7 @@ const MyRank = styled.div`
   max-width: 800px;
   padding: 15px;
   margin-bottom: 10px;
-  background-color: #333;
+  background-color: #007bff;
   color: white;
   border-radius: 8px;
 `;
