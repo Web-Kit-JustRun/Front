@@ -10,7 +10,7 @@ const Layout = ({ children, layoutType }) => {
   const currentLessonId = useRecoilValue(currentLessonIdStore);
 
   const currentLesson = lessons.find(
-    (lesson) => lesson.course_id === currentLessonId,
+    (lesson) => lesson.courseId === currentLessonId,
   );
 
   return (
@@ -21,8 +21,8 @@ const Layout = ({ children, layoutType }) => {
       <ContentWrapper>
         {layoutType === "lesson" && (
           <NavBar>
-            <Navbar course_name={currentLesson?.course_name ?? "강의"} />{" "}
-            {/* course_name 전달 */}
+            <Navbar courseName={currentLesson?.courseName ?? "강의"} />{" "}
+            {/* courseName 전달 */}
           </NavBar>
         )}
         {(layoutType === "store" || layoutType === "purchaseList") && (

@@ -75,13 +75,13 @@ const QuizBoard = () => {
             {quizzes && quizzes.length > 0 ? (
               quizzes.map((quiz) => (
                 <TableRow
-                  key={quiz.quiz_id}
+                  key={quiz.quizId}
                   onClick={() => handleRowClick(quiz)}
                 >
-                  <TableCell>{quiz.quiz_id}</TableCell>
+                  <TableCell>{quiz.quizId}</TableCell>
                   <TableCell>{quiz.title}</TableCell>
                   <TableCell>
-                    {new Date(quiz.creation_date).toLocaleDateString("ko-KR")}
+                    {new Date(quiz.creationDate).toLocaleDateString("ko-KR")}
                   </TableCell>
                   <TableCell>
                     {getAttemptStatusLabel(quiz.attempt_status)}

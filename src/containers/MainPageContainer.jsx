@@ -54,8 +54,8 @@ const MainPage = () => {
 
   console.log("🚀 ~ MainPage ~ rankings:", rankings, recentQuizzes);
 
-  const goToLessonPage = (course_id) => {
-    setCurrentLessonId(course_id);
+  const goToLessonPage = (courseId) => {
+    setCurrentLessonId(courseId);
     navigate(`/lesson`);
   };
 
@@ -83,11 +83,11 @@ const MainPage = () => {
               <tbody>
                 {courses.map((course) => (
                   <tr
-                    key={course.course_id}
-                    onClick={() => goToLessonPage(course.course_id)}
+                    key={course.courseId}
+                    onClick={() => goToLessonPage(course.courseId)}
                     style={{ cursor: "pointer" }}
                   >
-                    <td>{course.course_name}</td>
+                    <td>{course.courseName}</td>
                   </tr>
                 ))}
               </tbody>
@@ -109,13 +109,13 @@ const MainPage = () => {
               <tbody>
                 {recentQuizzes.map((quiz) => (
                   <tr
-                    key={quiz.quiz_id}
-                    // onClick={() => navigate(`/quiz/${quiz.quiz_id}`)} // 퀴즈 상세 페이지로 이동
+                    key={quiz.quizId}
+                    // onClick={() => navigate(`/quiz/${quiz.quizId}`)} // 퀴즈 상세 페이지로 이동
                     style={{
                       cursor: "pointer", // 마우스 커서 변경
                     }}
                   >
-                    <td>{quiz.course_name}</td>
+                    <td>{quiz.courseName}</td>
                     <td>{quiz.title}</td>
                   </tr>
                 ))}
@@ -131,7 +131,7 @@ const MainPage = () => {
         <h2>랭킹</h2>
         {rankings.map((rank, index) => (
           <p key={index}>{`${index + 1}. ${rank.name} (${
-            rank.ranking_points
+            rank.rankingPoints
           } pt)`}</p>
         ))}
         <NavigateButton onClick={() => navigate("/rank")}>

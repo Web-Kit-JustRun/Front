@@ -55,8 +55,8 @@ const Header = () => {
             수업 선택
           </option>
           {lessons.map((course) => (
-            <option key={course.course_id} value={course.course_id}>
-              {course.course_name}
+            <option key={course.courseId} value={course.courseId}>
+              {course.courseName}
             </option>
           ))}
         </ClassSelect>
