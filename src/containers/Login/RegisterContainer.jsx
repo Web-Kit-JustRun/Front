@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegisterComponent from "../../components/Login/RegisterComponent";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import { useRequest } from "../../utils/useRequest";
 
 const RegisterContainer = () => {
   const navigate = useNavigate();
+  const request = useRequest();
 
   // 상태 관리: 아이디, 비밀번호, 비밀번호 확인, 이름, 이메일
   const [userId, setId] = useState("");
@@ -43,15 +45,12 @@ const RegisterContainer = () => {
     // 모든 입력값이 유효할 경우 회원가입 완료
     if (userId && userPw && userPw === userPw2 && userName && userEmail) {
       try {
-        await axios.post(
-          process.env.REACT_APP_HOST_URL + "/api/auth/register",
-          {
-            username: userId,
-            password: userPw,
-            name: userName,
-            email: fullEmail,
-          },
-        );
+        await request("/api/auth/register", "POST", {
+          username: userId,
+          password: userPw,
+          name: userName,
+          email: fullEmail,
+        });
       } catch (error) {
         if (error instanceof AxiosError) {
           if (error.status === 409) {

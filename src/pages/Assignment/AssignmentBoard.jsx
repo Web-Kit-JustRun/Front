@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import axios, { AxiosError } from "axios";
 import styled from "styled-components";
 import { currentLessonIdStore } from "../../store/lessonStore";
 import { userStore } from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
+import { useRequest } from "../../utils/useRequest";
 
 export default function AssignmentBoard() {
   const userData = useRecoilValue(userStore);
@@ -14,20 +14,16 @@ export default function AssignmentBoard() {
   const [assignments, setAssignments] = useState([]);
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-
-  console.log(currentLessonId);
+  const request = useRequest();
 
   useEffect(() => {
     async function fetchLessonDetail() {
       try {
-        const result = await axios.get(
-          process.env.REACT_APP_HOST_URL +
-            `/api/courses/${currentLessonId}/assignments`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
+        const data = await request(
+          `/api/courses/${currentLessonId}/assignments`,
+          "GET",
         );
-        setAssignments(result.data);
+        setAssignments(data);
       } catch (error) {
         console.error(error);
         setError("데이터를 로드하는 중 오류가 발생했습니다.");
@@ -35,7 +31,9 @@ export default function AssignmentBoard() {
     }
 
     fetchLessonDetail();
-  }, [currentLessonId, token]);
+  }, [currentLessonId, request, token]);
+
+  console.log(assignments);
 
   if (error)
     return (
@@ -52,7 +50,7 @@ export default function AssignmentBoard() {
     <Layout>
       <Header>
         <p>과제</p>
-        {user && user.user_type === "professor" && (
+        {user && user.userType === "professor" && (
           <button className="assignmentAddButton">과제 생성</button>
         )}
       </Header>
@@ -60,16 +58,16 @@ export default function AssignmentBoard() {
         {assignments.length > 0 ? (
           assignments.map((assignment) => (
             <TableCell
-              key={assignment.assignment_id}
+              key={assignment.assignmentId}
               onClick={() => {
-                navigate(`/assignments/${assignment.assignment_id}`);
+                navigate(`/assignments/${assignment.assignmentId}`);
               }}
             >
               <p>{assignment.title}</p>
               <div>
-                <p>기한 {new Date(assignment.due_date).toLocaleDateString()}</p>
+                <p>기한 {new Date(assignment.dueDate).toLocaleDateString()}</p>
                 <p>
-                  {assignment.student_score ?? 0}/{assignment.score}
+                  {assignment.student_score ?? 0}/{assignment.score ?? 0}
                 </p>
               </div>
             </TableCell>

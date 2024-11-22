@@ -23,7 +23,6 @@ const RegisterComponent = (props) => {
     handleNavigate,
     emailDomain,
   } = props;
-  console.log(props); // 이 부분을 추가해서 함수가 제대로 전달되는지 확인
 
   return (
     <RegisterComponentBlock>

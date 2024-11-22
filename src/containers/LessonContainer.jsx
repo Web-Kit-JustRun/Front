@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useRecoilValue } from "recoil";
 import { userStore } from "../store/userStore";
+import { currentLessonIdStore } from "../store/lessonStore";
+import { useRequest } from "../utils/useRequest";
 
 const LessonContainer = () => {
   const navigate = useNavigate();
@@ -13,7 +14,9 @@ const LessonContainer = () => {
   const [quizzes, setQuizzes] = useState([]);
 
   const userState = useRecoilValue(userStore);
+  const currentLessonId = useRecoilValue(currentLessonIdStore);
   const { token: authToken, user: userData } = userState;
+  const request = useRequest();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,25 +36,25 @@ const LessonContainer = () => {
         ]);
 
         // 과제 목록 API 호출
-        const assignmentsResponse = await axios.get(
-          process.env.REACT_APP_HOST_URL + `/api/courses/1/assignments`,
-          { headers: { Authorization: `Bearer ${authToken}` } },
+        const assignmentsData = await request(
+          `/api/courses/${currentLessonId}/assignments`,
+          "GET",
         );
-        setAssignments(assignmentsResponse.data.slice(0, 3));
+        setAssignments(assignmentsData.slice(0, 3));
 
         // 퀴즈 리스트 API 호출
-        const quizzesResponse = await axios.get(
-          process.env.REACT_APP_HOST_URL + `/api/courses/1/quizzes`,
-          { headers: { Authorization: `Bearer ${authToken}` } },
+        const quizzesData = await request(
+          `/api/courses/${currentLessonId}/quizzes`,
+          "GET",
         );
-        setQuizzes(quizzesResponse.data.slice(0, 3));
+        setQuizzes(quizzesData.slice(0, 3));
       } catch (error) {
         console.error("데이터를 가져오는 데 실패했습니다:", error);
       }
     };
 
     fetchData();
-  }, [authToken, userData.userId]);
+  }, [authToken, currentLessonId, request, userData.userId]);
 
   return (
     <LessonBlock>
@@ -81,7 +84,7 @@ const LessonContainer = () => {
                 {assignments.map((assignment) => (
                   <tr key={assignment.assignment_id}>
                     <td>{assignment.title}</td>
-                    <td>{assignment.due_date}</td>
+                    <td>{new Date(assignment.dueDate).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>
@@ -114,7 +117,7 @@ const LessonContainer = () => {
                 {quizzes.map((quiz) => (
                   <tr key={quiz.quiz_id}>
                     <td>{quiz.title}</td>
-                    <td>{quiz.creation_date}</td>
+                    <td>{new Date(quiz.creation_date).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>
@@ -134,7 +137,7 @@ const LessonBlock = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
   background-color: #f9fafb;
   width: 80%;
 `;
@@ -151,7 +154,8 @@ const Card = styled.div`
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  width: 100%;
+  /* width: 100%; */
+  flex-grow: 1;
   transition: transform 0.2s ease-in-out;
 
   &:hover {

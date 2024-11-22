@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilValue } from "recoil";
 import { userStore } from "../store/userStore";
+import { useRequest } from "../utils/useRequest";
 
 const RankContainer = () => {
   const [top_100, set_Top100] = useState([]);
@@ -12,19 +12,16 @@ const RankContainer = () => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const userData = useRecoilValue(userStore);
+  const request = useRequest();
   // const { userId } = userData;
 
   useEffect(() => {
     const fetchRankingData = async () => {
       try {
-        const topRankingPromise = axios.get(
-          process.env.REACT_APP_HOST_URL + "/api/ranking/top",
-        );
-
-        const userRankingPromise = axios.get(
-          process.env.REACT_APP_HOST_URL +
-            `/api/users/${userData.user.userId}/ranking`,
-          { headers: { Authorization: `Bearer ${userData.token}` } },
+        const topRankingPromise = request("/api/ranking/top", "GET");
+        const userRankingPromise = request(
+          `/api/users/${userData.user.userId}/ranking`,
+          "GET",
         );
 
         const [topRankingResult, userRankingResult] = await Promise.allSettled([
@@ -32,11 +29,11 @@ const RankContainer = () => {
           userRankingPromise,
         ]);
         if (topRankingResult.status === "fulfilled") {
-          set_Top100(topRankingResult.value.data);
+          set_Top100(topRankingResult.value);
         }
         if (userRankingResult.status === "fulfilled") {
-          console.log(userRankingResult.value.data);
-          setUser_rank(userRankingResult.value.data);
+          console.log(userRankingResult.value);
+          setUser_rank(userRankingResult.value);
         }
       } catch (error) {
         console.error("Error fetching ranking data:", error);
@@ -44,7 +41,7 @@ const RankContainer = () => {
     };
 
     fetchRankingData();
-  }, [userData.token, userData.user.userId]);
+  }, [request, userData.token, userData.user.userId]);
 
   return (
     <RankContainerBlock>

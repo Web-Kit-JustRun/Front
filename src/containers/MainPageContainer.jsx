@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userStore } from "../store/userStore";
 import { currentLessonIdStore } from "../store/lessonStore";
+import { useRequest } from "../utils/useRequest";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ const MainPage = () => {
   const userState = useRecoilValue(userStore);
   const setCurrentLessonId = useSetRecoilState(currentLessonIdStore);
   const { token: authToken, user: userData } = userState;
+  const request = useRequest();
 
   // 로드맵 더미 데이터
   const roadmap = [
@@ -31,24 +32,15 @@ const MainPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [rankingsResponse, quizzesResponse, coursesResponse] =
-          await Promise.all([
-            axios.get(process.env.REACT_APP_HOST_URL + "/api/ranking/top"),
-            axios.get(process.env.REACT_APP_HOST_URL + "/api/quizzes/recent", {
-              headers: { Authorization: `Bearer ${authToken}` },
-            }),
-            axios.get(
-              process.env.REACT_APP_HOST_URL +
-                `/api/users/${userData.userId}/courses`,
-              {
-                headers: { Authorization: `Bearer ${authToken}` },
-              },
-            ),
-          ]);
+        const [rankingsData, quizzesData, coursesData] = await Promise.all([
+          request("/api/ranking/top", "GET"),
+          request("/api/quizzes/recent", "GET"),
+          request(`/api/users/${userData.userId}/courses`, "GET"),
+        ]);
 
-        setRankings(rankingsResponse.data);
-        setRecentQuizzes(quizzesResponse.data);
-        setCourses(coursesResponse.data);
+        setRankings(rankingsData);
+        setRecentQuizzes(quizzesData);
+        setCourses(coursesData);
         setLoading(false);
       } catch (error) {
         console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
@@ -58,7 +50,7 @@ const MainPage = () => {
     };
 
     fetchData();
-  }, [userData, authToken]);
+  }, [userData, authToken, request]);
 
   console.log("🚀 ~ MainPage ~ rankings:", rankings, recentQuizzes);
 
