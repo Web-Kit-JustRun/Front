@@ -14,23 +14,26 @@ const Header = () => {
   const [currentLessonId, setCurrentLessonId] =
     useRecoilState(currentLessonIdStore);
   const [userData, setUserData] = useRecoilState(userStore);
-
+  
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(
           process.env.REACT_APP_HOST_URL +
             `/api/users/${userData.user.userId}/courses`,
-          { headers: { Authorization: `Bearer ${userData.token}` } },
-        );
-        setLessons(response.data);
-      } catch (error) {
+            { headers: { Authorization: `Bearer ${userData.token}` } },
+          );
+          setLessons(response.data);
+        } catch (error) {
         console.error("수업 정보를 가져오는 데 실패했습니다:", error);
       }
     };
     fetchCourses();
   }, [setCurrentLessonId, setLessons, userData.token, userData.user.userId]);
-
+  
+  console.log("🚀 ~ Header ~ userData:", userData.user.ranking_points)
+  
+  
   const handleClassChange = (e) => {
     const lessonId = e.target.value;
     setCurrentLessonId(+lessonId);
@@ -66,7 +69,7 @@ const Header = () => {
           navigate("/mypage");
         }}>{userData.user.username}</UserId>
           <RankingPoints onClick={() => navigate("/rank")}>
-            랭킹 점수: {userData.user.rankingPoints}
+            랭킹 점수: {userData.user.ranking_points}
           </RankingPoints>
         </UserInfo>
         <StoreIcon onClick={() => navigate("/store")}>
