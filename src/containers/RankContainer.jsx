@@ -10,19 +10,29 @@ const RankContainer = () => {
   const [top100, setTop100] = useState([]);
   const [userRank, setUserRank] = useState(null);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [rankingPercentage, setRankPercentage] = useState("");
 
   const userData = useRecoilValue(userStore);
   const request = useRequest();
   // const { userId } = userData;
+  // console.log("🚀 ~ RankContainer ~ userData:", userData);
 
   useEffect(() => {
     const fetchRankingData = async () => {
       try {
         const topRankingPromise = request("/api/ranking/top", "GET");
+        // console.log(
+        // "🚀 ~ fetchRankingData ~ topRankingPromise:",
+        // topRankingPromise,
+        // );
         const userRankingPromise = request(
           `/api/users/${userData.user.userId}/ranking`,
           "GET",
         );
+        // console.log(
+        // "🚀 ~ fetchRankingData ~ userRankingPromise:",
+        // userRankingPromise,
+        // );
 
         const [topRankingResult, userRankingResult] = await Promise.allSettled([
           topRankingPromise,
@@ -34,6 +44,8 @@ const RankContainer = () => {
         if (userRankingResult.status === "fulfilled") {
           setUserRank(userRankingResult.value);
         }
+        setRankPercentage(Math.floor(userRank.rankingPercentage * 100) / 100);
+        console.log("🚀 ~ RankContainer ~ userRank:", userRank);
       } catch (error) {
         console.error("Error fetching ranking data:", error);
       }
@@ -42,6 +54,7 @@ const RankContainer = () => {
     fetchRankingData();
   }, [request, userData.token, userData.user.userId]);
 
+  // console.log("🚀 ~ RankContainer ~ userRank:", userRank);
   return (
     <RankContainerBlock>
       <TitleContainer>
@@ -56,8 +69,8 @@ const RankContainer = () => {
       </TitleContainer>
       {userRank && (
         <MyRank>
-          <RankCell>상위 {userRank.rankingPercentage}%</RankCell>
           <RankCell>{userData.user.name}</RankCell>
+          <RankCell>상위 {rankingPercentage}%</RankCell>
           <RankCell>{userRank.rankingPoints} points</RankCell>
         </MyRank>
       )}
@@ -95,7 +108,7 @@ const RankContainerBlock = styled.div`
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   padding: 20px;
 `;
 
@@ -113,7 +126,7 @@ const Title = styled.h1`
 const InfoIcon = styled.div`
   position: relative;
   font-size: 1.5rem;
-  color: #555;
+  color: #007bff;
   cursor: pointer;
 
   &:hover {
@@ -145,7 +158,7 @@ const RankTable = styled.table`
 `;
 
 const RankHeader = styled.tr`
-  background-color: #333;
+  background-color: #007bff;
   color: white;
   font-weight: bold;
 `;
@@ -181,7 +194,7 @@ const MyRank = styled.div`
   max-width: 800px;
   padding: 15px;
   margin-bottom: 10px;
-  background-color: #333;
+  background-color: #007bff;
   color: white;
   border-radius: 8px;
 `;

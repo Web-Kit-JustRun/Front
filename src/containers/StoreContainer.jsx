@@ -22,29 +22,30 @@ const StoreContainer = () => {
   const { userId } = userData;
   const request = useRequest();
   console.log("selectedMenu:", selectedMenu); // 상태 확인
-
+  
   useEffect(() => {
     // const resetMenu = () => {
-    setSelectedMenu("");
-    // };
-    // resetMenu();
-  }, [setSelectedMenu]);
-
-  // 아이템 목록 조회
-  useEffect(() => {
-    const fetchItemData = async () => {
-      try {
-        const data = await request("/api/store/items", "GET");
-
-        data && setItems(data);
-      } catch (error) {
-        console.error("Error fetching item data:", error);
-      }
-    };
-
-    fetchItemData();
-  }, [request]);
-
+      setSelectedMenu("");
+      // };
+      // resetMenu();
+    }, [setSelectedMenu]);
+    
+    // 아이템 목록 조회
+    useEffect(() => {
+      const fetchItemData = async () => {
+        try {
+          const data = await request("/api/store/items", "GET");
+          
+          data && setItems(data);
+        } catch (error) {
+          console.error("Error fetching item data:", error);
+        }
+      };
+      
+      fetchItemData();
+    }, [request]);
+    
+    // console.log("🚀 ~ StoreContainer ~ items:", items)
   // 리워드 조회
   useEffect(() => {
     const fetchRewardData = async () => {
@@ -62,31 +63,31 @@ const StoreContainer = () => {
 
   // 선택된 메뉴에 따른 아이템 필터링
   const filteredItems = selectedMenu
-    ? items.filter((item) => item.item_type === selectedMenu) // 선택된 메뉴가 있을 경우 필터링
+    ? items.filter((item) => item.itemType === selectedMenu) // 선택된 메뉴가 있을 경우 필터링
     : items; // 선택된 메뉴가 없을 경우 모든 아이템 출력
 
   // 수량 입력 핸들러
-  const handleQuantityChange = (item_id, value) => {
+  const handleQuantityChange = (itemId, value) => {
     setQuantities((prev) => ({
       ...prev,
-      [item_id]: Math.max(0, parseInt(value) || 0), // 0 이상의 정수로 설정
+      [itemId]: Math.max(0, parseInt(value) || 0), // 0 이상의 정수로 설정
     }));
   };
 
   const handleBuy = async (e, item) => {
     e.preventDefault();
-    const quantity = quantities[item.item_id] || 1; // 수량 기본값: 1
+    const quantity = quantities[item.itemId] || 1; // 수량 기본값: 1
 
     if (rewardPoints >= item.price * quantity) {
       try {
-        await request(`/api/store/items/${item.item_id}/purchase`, "POST", {
-          purchase_id: item.item_id,
+        await request(`/api/store/items/${item.itemId}/purchase`, "POST", {
+          purchase_id: item.itemId,
           price: item.price,
           quantity: quantity, // 수량 포함
         });
 
         alert(
-          `"${item.item_name}"을(를) ${
+          `"${item.itemName}"을(를) ${
             item.price * quantity
           } 포인트에 구매했습니다!`,
         );
@@ -105,17 +106,17 @@ const StoreContainer = () => {
         {filteredItems.length > 0 ? (
           <ItemList>
             {filteredItems.map((item) => (
-              <ItemCard key={item.item_id}>
+              <ItemCard key={item.itemId}>
                 <FontAwesomeIcon icon={faTicket} size="2x" />
                 <ItemDetails>
-                  <ItemName>{item.item_name}</ItemName>
+                  <ItemName>{item.itemName}</ItemName>
                   <ItemPrice>가격: {item.price} Kit</ItemPrice>
                   <QuantityInput
                     type="number"
                     min="1"
-                    value={quantities[item.item_id] || 1}
+                    value={quantities[item.itemId] || 1}
                     onChange={(e) =>
-                      handleQuantityChange(item.item_id, e.target.value)
+                      handleQuantityChange(item.itemId, e.target.value)
                     }
                   />
                 </ItemDetails>

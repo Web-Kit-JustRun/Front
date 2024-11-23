@@ -15,6 +15,7 @@ import SolveQuiz from "../pages/Quiz/SolveQuiz";
 import MyQuiz from "../pages/Quiz/MyQuiz";
 import QuizBoard from "../containers/QuizBoardContainer";
 import MyPage from "../pages/MyPage";
+import ChangePw from "../pages/ChangePw";
 import AssignmentDetailBoard from "../pages/Assignment/AssignmentDetailBoard";
 
 // 기본 틀임. 로그인 회원가입은 고정된 레이아웃이 없을거라 여기(사실 역할별로 나눈거)
@@ -29,8 +30,11 @@ const publicRoutes = [
 const authenticatedRoutes = [
   //메인 홈
   { path: "/main", element: <Main />, layoutType: "main" },
-
+  //마이페이지
   { path: "/mypage", element: <MyPage />, layoutType: "main" },
+  //비밀번호 변경 페이지
+  { path: "/change-password", element: <ChangePw />, layoutType: "main" },
+
   //랭킹 게시판
   { path: "/rank", element: <Rank />, layoutType: "main" },
   //강의 목록 페이지(더미)

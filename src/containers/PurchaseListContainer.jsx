@@ -32,10 +32,10 @@ const PurchaseListContainer = () => {
 
   // selectedMenu로 아이템 필터링
   const filteredItems = selectedMenu
-    ? items.filter((item) => item.item_type === selectedMenu) // 선택된 메뉴에 맞는 아이템만 필터링
-    : items; // 선택된 메뉴가 없으면 전체 데이터
+    ? items.filter((item) => item.itemType === selectedMenu) // 선택된 메뉴에 맞는 아이템만 필터링
+    : items; // 선택된 메뉴가 없으면 전체 데이터VV
 
-  console.log("🚀 ~ PurchaseListContainer ~ filteredItems:", filteredItems);
+  // console.log("🚀 ~ PurchaseListContainer ~ filteredItems:", filteredItems);
 
   // 날짜 포맷팅 함수
   const formatDate = (dateString) => {
@@ -69,15 +69,15 @@ const PurchaseListContainer = () => {
         </thead>
         <tbody>
           {filteredItems.map((item) => (
-            <TableRow key={item.purchase_id}>
+            <TableRow key={item.purchaseId}>
               <TableCell>
                 <FontAwesomeIcon icon={faTicket} />
               </TableCell>
-              <TableCell>{item.item_type}</TableCell>
-              <TableCell>{item.item_name}</TableCell>
-              <TableCell>{formatDate(item.purchase_date)}</TableCell>
+              <TableCell>{item.itemType}</TableCell>
+              <TableCell>{item.itemName}</TableCell>
+              <TableCell>{formatDate(item.purchaseDate)}</TableCell>
               <TableCell>{item.price} Kit</TableCell>
-              <TableCell>{item.is_used ? "사용 완료" : "사용 가능"}</TableCell>
+              <TableCell>{item.isUsed ? "사용 완료" : "사용 가능"}</TableCell>
             </TableRow>
           ))}
         </tbody>
