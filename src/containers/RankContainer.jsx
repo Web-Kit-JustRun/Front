@@ -10,19 +10,29 @@ const RankContainer = () => {
   const [top100, setTop100] = useState([]);
   const [userRank, setUserRank] = useState(null);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [rankingPercentage, setRankPercentage] = useState("");
 
   const userData = useRecoilValue(userStore);
   const request = useRequest();
   // const { userId } = userData;
+  // console.log("🚀 ~ RankContainer ~ userData:", userData);
 
   useEffect(() => {
     const fetchRankingData = async () => {
       try {
         const topRankingPromise = request("/api/ranking/top", "GET");
+        // console.log(
+        // "🚀 ~ fetchRankingData ~ topRankingPromise:",
+        // topRankingPromise,
+        // );
         const userRankingPromise = request(
           `/api/users/${userData.user.userId}/ranking`,
           "GET",
         );
+        // console.log(
+        // "🚀 ~ fetchRankingData ~ userRankingPromise:",
+        // userRankingPromise,
+        // );
 
         const [topRankingResult, userRankingResult] = await Promise.allSettled([
           topRankingPromise,
@@ -34,6 +44,8 @@ const RankContainer = () => {
         if (userRankingResult.status === "fulfilled") {
           setUserRank(userRankingResult.value);
         }
+        setRankPercentage(Math.floor(userRank.rankingPercentage * 100) / 100);
+        console.log("🚀 ~ RankContainer ~ userRank:", userRank);
       } catch (error) {
         console.error("Error fetching ranking data:", error);
       }
@@ -42,6 +54,7 @@ const RankContainer = () => {
     fetchRankingData();
   }, [request, userData.token, userData.user.userId]);
 
+  // console.log("🚀 ~ RankContainer ~ userRank:", userRank);
   return (
     <RankContainerBlock>
       <TitleContainer>
@@ -56,8 +69,8 @@ const RankContainer = () => {
       </TitleContainer>
       {userRank && (
         <MyRank>
-          <RankCell>상위 {userRank.rankingPercentage}%</RankCell>
           <RankCell>{userData.user.name}</RankCell>
+          <RankCell>상위 {rankingPercentage}%</RankCell>
           <RankCell>{userRank.rankingPoints} points</RankCell>
         </MyRank>
       )}

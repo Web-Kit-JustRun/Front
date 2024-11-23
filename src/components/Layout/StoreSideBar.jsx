@@ -11,25 +11,31 @@ const StoreSideBar = ({ layoutType }) => {
   const [selectedMenu, setSelectedMenu] = useRecoilState(selectedMenuState);
   const userData = useRecoilValue(userStore).user; // 사용자 데이터 가져오기
   const { userId } = userData || {};
+  // console.log("🚀 ~ StoreSideBar ~ userId:", userId)
   const [rewardPoints, setRewardPoints] = useState(null); // 리워드 포인트 상태
   const request = useRequest();
+  
 
+  
   // 리워드 포인트 가져오기
   useEffect(() => {
     const fetchRewardPoints = async () => {
       try {
-        const data = await request(`/api/users/${userId}/rewards`, "GET");
-        setRewardPoints(data.rewardPoints);
+        const data = await request(`/api/users/reward_point`, "GET");
+        setRewardPoints(data.rewardPoint);
       } catch (error) {
         console.error("Error fetching reward points:", error);
         setRewardPoints("N/A"); // 오류 시 기본값 설정
       }
     };
-
+    
     if (userId) {
       fetchRewardPoints(); // 사용자 ID가 있을 경우 API 호출
     }
   }, [request, userId]);
+  
+  // console.log("🚀 ~ StoreSideBar ~ rewardPoints:", rewardPoints)
+  
 
   // 메뉴 클릭 시 상태 업데이트
   const handleMenuClick = (menu) => {
@@ -47,9 +53,9 @@ const StoreSideBar = ({ layoutType }) => {
       <WholeMenuButton onClick={() => handleMenuClick("")}>
         전체메뉴
       </WholeMenuButton>
-      <MenuButton onClick={() => handleMenuClick("타입1")}>메뉴1</MenuButton>
-      <MenuButton onClick={() => handleMenuClick("타입2")}>메뉴2</MenuButton>
-      <MenuButton onClick={() => handleMenuClick("타입3")}>메뉴3</MenuButton>
+      <MenuButton onClick={() => handleMenuClick("frankburger")}>프랭크버거</MenuButton>
+      <MenuButton onClick={() => handleMenuClick("bookcafe")}>북카페</MenuButton>
+      <MenuButton onClick={() => handleMenuClick("study")}>수업</MenuButton>
       {layoutType === "store" ? (
         <StorePurchaseButton
           onClick={() => {
