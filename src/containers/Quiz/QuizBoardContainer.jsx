@@ -17,11 +17,12 @@ const QuizBoard = () => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const data = await request(`/api/courses/${currentLessonId}/quizzes/list`, "GET");
+        const data = await request(
+          `/api/courses/${currentLessonId}/quizzes`,
+          "GET",
+        );
 
         data && setQuizzes(data);
-    console.log(data)
-
       } catch (error) {
         console.error("Error fetching quizzes:", error);
       }
@@ -44,7 +45,7 @@ const QuizBoard = () => {
       case "incorrect":
         return "오답";
       case "not_attempted":
-        return "미풀이";
+        return "풀지 않은 문제";
       default:
         return "알 수 없음";
     }
@@ -75,8 +76,8 @@ const QuizBoard = () => {
             <tr>
               <TableHeader>문제 ID</TableHeader>
               <TableHeader>제목</TableHeader>
-              <TableHeader>생성 날짜</TableHeader>
               <TableHeader>풀이 상태</TableHeader>
+              <TableHeader>생성 날짜</TableHeader>
             </tr>
           </thead>
           <tbody>
@@ -89,10 +90,10 @@ const QuizBoard = () => {
                   <TableCell>{quiz.quizId}</TableCell>
                   <TableCell>{quiz.title}</TableCell>
                   <TableCell>
-                    {new Date(quiz.creationDate).toLocaleDateString("ko-KR")}
+                    {getAttemptStatusLabel(quiz.attemptStatus)}
                   </TableCell>
                   <TableCell>
-                    {getAttemptStatusLabel(quiz.attempt_status)}
+                    {new Date(quiz.creationDate).toLocaleDateString("ko-KR")}
                   </TableCell>
                 </TableRow>
               ))

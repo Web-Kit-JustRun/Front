@@ -1,27 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { useRequest } from "../utils/useRequest";
+import { currentLessonIdStore } from "../store/lessonStore";
 
 const QuizApprovalBoardContainer = () => {
-  const [quizzes, setQuizzes] = useState([
-    {
-      id: 1,
-      title: "퀴즈 제목 1",
-      content: "퀴즈 내용 1",
-      choices: ["1번 보기", "2번 보기", "3번 보기 (정답)", "4번 보기"],
-      correctChoice: 2,
-      points: 100,
-      author: "홍길동",
-    },
-    {
-      id: 2,
-      title: "퀴즈 제목 2",
-      content: "퀴즈 내용 2",
-      choices: ["1번 보기", "2번 보기 (정답)", "3번 보기", "4번 보기"],
-      correctChoice: 1,
-      points: 150,
-      author: "이순신",
-    },
-  ]);
+  const [quizzes, setQuizzes] = useState([]);
+  const currentLessonId = useRecoilValue(currentLessonIdStore);
+
+  const request = useRequest();
+
+  useEffect(() => {
+    const fetchQuizzes = async () => {
+      try {
+        const data = await request(
+          `/api/courses/${currentLessonId}/quizzes/pending`,
+          "GET",
+        );
+
+        data && setQuizzes(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching quizzes:", error);
+      }
+    };
+    fetchQuizzes();
+  }, [currentLessonId, request]);
 
   return (
     <BoardContainer>
@@ -31,19 +35,19 @@ const QuizApprovalBoardContainer = () => {
       </Header>
       <QuizList>
         {quizzes.map((quiz) => (
-          <QuizItem key={quiz.id}>
+          <QuizItem key={quiz.quizId}>
             <QuizHeader>
               <QuizTitle>{quiz.title}</QuizTitle>
               <QuizAuthor>작성자: {quiz.author}</QuizAuthor>
             </QuizHeader>
             <QuizContent>{quiz.content}</QuizContent>
-            <Choices>
+            {/* <Choices>
               {quiz.choices.map((choice, index) => (
                 <Choice key={index} isCorrect={index === quiz.correctChoice}>
                   {choice} {index === quiz.correctChoice && "(정답)"}
                 </Choice>
               ))}
-            </Choices>
+            </Choices> */}
             <Actions>
               <Points>{quiz.points}pt</Points>
               <ActionButton approve>허가</ActionButton>
@@ -139,8 +143,7 @@ const Choice = styled.div`
   text-align: center;
   transition: background-color 0.3s;
   &:hover {
-    background-color: ${(props) =>
-      props.isCorrect ? "#cfe2ff" : "#e9ecef"};
+    background-color: ${(props) => (props.isCorrect ? "#cfe2ff" : "#e9ecef")};
   }
 `;
 
@@ -162,13 +165,11 @@ const ActionButton = styled.button`
   font-size: 0.9rem;
   border: none;
   border-radius: 5px;
-  background-color: ${(props) =>
-    props.approve ? "#007bff" : "#dc3545"};
+  background-color: ${(props) => (props.approve ? "#007bff" : "#dc3545")};
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
   &:hover {
-    background-color: ${(props) =>
-      props.approve ? "#0056b3" : "#c82333"};
+    background-color: ${(props) => (props.approve ? "#0056b3" : "#c82333")};
   }
 `;
