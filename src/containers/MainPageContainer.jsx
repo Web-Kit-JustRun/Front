@@ -13,7 +13,6 @@ const MainPage = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const userState = useRecoilValue(userStore);
   const setCurrentLessonId = useSetRecoilState(currentLessonIdStore);
   const { token: authToken, user: userData } = userState;
@@ -52,7 +51,7 @@ const MainPage = () => {
     fetchData();
   }, [userData, authToken, request]);
 
-  console.log("🚀 ~ MainPage ~ rankings:", rankings, recentQuizzes);
+  // console.log("🚀 ~ MainPage ~ rankings:", rankings, recentQuizzes);
 
   const goToLessonPage = (courseId) => {
     setCurrentLessonId(courseId);
@@ -65,7 +64,7 @@ const MainPage = () => {
   return (
     <Container>
       <Sidebar>
-        <h2>로드맵</h2>
+        <h2>일정</h2>
         {roadmap.map((item, index) => (
           <p key={index}>{`${item.date}: ${item.task}`}</p>
         ))}

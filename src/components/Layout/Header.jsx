@@ -14,6 +14,8 @@ const Header = () => {
   const [currentLessonId, setCurrentLessonId] =
     useRecoilState(currentLessonIdStore);
   const [userData, setUserData] = useRecoilState(userStore);
+  // console.log("🚀 ~ Header ~ userData:", userData)
+  const userName = userData.user.name;
   const request = useRequest();
 
   useEffect(() => {
@@ -68,10 +70,10 @@ const Header = () => {
               navigate("/mypage");
             }}
           >
-            {userData.user.username}
+            {userName}
           </UserId>
           <RankingPoints onClick={() => navigate("/rank")}>
-            랭킹 점수: {userData.user.rankingPoints}
+            {userData.user.rankingPoints} RP
           </RankingPoints>
         </UserInfo>
         <StoreIcon onClick={() => navigate("/store")}>

@@ -14,6 +14,7 @@ import CreateQuizContainer from "../containers/Quiz/CreateQuizContainer";
 import SolveQuiz from "../pages/Quiz/SolveQuiz";
 import MyQuiz from "../pages/Quiz/MyQuiz";
 import MyPage from "../pages/MyPage";
+import ChangePw from "../pages/ChangePw";
 import AssignmentDetailBoard from "../pages/Assignment/AssignmentDetailBoard";
 import { elements } from "chart.js";
 import QuizApprovalBoard from "../pages/QuizApprovalBoard";
@@ -31,8 +32,11 @@ const publicRoutes = [
 const authenticatedRoutes = [
   //메인 홈
   { path: "/main", element: <Main />, layoutType: "main" },
-
+  //마이페이지
   { path: "/mypage", element: <MyPage />, layoutType: "main" },
+  //비밀번호 변경 페이지
+  { path: "/change-password", element: <ChangePw />, layoutType: "main" },
+
   //랭킹 게시판
   { path: "/rank", element: <Rank />, layoutType: "main" },
   //강의 목록 페이지(더미)

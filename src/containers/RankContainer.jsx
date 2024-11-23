@@ -10,9 +10,12 @@ const RankContainer = () => {
   const [top100, setTop100] = useState([]);
   const [userRank, setUserRank] = useState(null);
   const [showTooltip, setShowTooltip] = useState(false);
-  
+  const [rankingPercentage, setRankPercentage] = useState("");
+
   const userData = useRecoilValue(userStore);
   const request = useRequest();
+  // const { userId } = userData;
+  // console.log("🚀 ~ RankContainer ~ userData:", userData);
 
   useEffect(() => {
     const fetchRankingData = async () => {
@@ -20,7 +23,7 @@ const RankContainer = () => {
         const topRankingPromise = request("/api/ranking/top", "GET");
         const userRankingPromise = request(
           `/api/users/${userData.user.userId}/ranking`,
-          "GET"
+          "GET",
         );
 
         const [topRankingResult, userRankingResult] = await Promise.allSettled([
@@ -34,6 +37,8 @@ const RankContainer = () => {
         if (userRankingResult.status === "fulfilled") {
           setUserRank(userRankingResult.value);
         }
+        setRankPercentage(Math.floor(userRank.rankingPercentage * 100) / 100);
+        console.log("🚀 ~ RankContainer ~ userRank:", userRank);
       } catch (error) {
         console.error("Error fetching ranking data:", error);
       }
@@ -56,8 +61,8 @@ const RankContainer = () => {
       </TitleContainer>
       {userRank && (
         <MyRank>
-          <RankCell>상위 {userRank.rankingPercentage}%</RankCell>
           <RankCell>{userData.user.name}</RankCell>
+          <RankCell>상위 {rankingPercentage}%</RankCell>
           <RankCell>{userRank.rankingPoints} points</RankCell>
         </MyRank>
       )}
@@ -94,7 +99,7 @@ const RankContainerBlock = styled.div`
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  background-color: #f0f8ff;
+  background-color: #ffffff;
   padding: 20px;
 `;
 
