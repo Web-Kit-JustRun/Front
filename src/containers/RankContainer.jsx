@@ -5,6 +5,11 @@ import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilValue } from "recoil";
 import { userStore } from "../store/userStore";
 import { useRequest } from "../utils/useRequest";
+import diamond from "../img/rank/diamond.png";
+import platinum from "../img/rank/platinum.png";
+import gold from "../img/rank/gold.png";
+import silver from "../img/rank/silver.png";
+import bronze from "../img/rank/bronze.png";
 
 const RankContainer = () => {
   const [top100, setTop100] = useState([]);
@@ -14,8 +19,15 @@ const RankContainer = () => {
 
   const userData = useRecoilValue(userStore);
   const request = useRequest();
-  // const { userId } = userData;
-  // console.log("🚀 ~ RankContainer ~ userData:", userData);
+
+  // 티어 아이콘을 가져오는 함수
+  const getTierIcon = (percentage) => {
+    if (percentage <= 20) return diamond;
+    if (percentage <= 30) return platinum;
+    if (percentage <= 40) return gold;
+    if (percentage <= 50) return silver;
+    return bronze;
+  };
 
   useEffect(() => {
     const fetchRankingData = async () => {
@@ -36,8 +48,10 @@ const RankContainer = () => {
         }
         if (userRankingResult.status === "fulfilled") {
           setUserRank(userRankingResult.value);
+          const percentage =
+            Math.floor(userRankingResult.value.rankingPercentage * 100) / 100;
+          setRankPercentage(percentage);
         }
-        setRankPercentage(Math.floor(userRank.rankingPercentage * 100) / 100);
         console.log("🚀 ~ RankContainer ~ userRank:", userRank);
       } catch (error) {
         console.error("Error fetching ranking data:", error);
@@ -61,9 +75,14 @@ const RankContainer = () => {
       </TitleContainer>
       {userRank && (
         <MyRank>
-          <RankCell>{userData.user.name}</RankCell>
-          <RankCell>상위 {rankingPercentage}%</RankCell>
-          <RankCell>{userRank.rankingPoints} points</RankCell>
+          <ProfileImage>
+            <img src={getTierIcon(rankingPercentage)} alt="티어 아이콘" />
+          </ProfileImage>
+          <RankDetails>
+            <RankCell>{userData.user.name}</RankCell>
+            <RankCell>상위 {rankingPercentage}%</RankCell>
+            <RankCell>{userRank.rankingPoints} points</RankCell>
+          </RankDetails>
         </MyRank>
       )}
       <ScrollableContainer>
@@ -175,7 +194,7 @@ const RankCell = styled.td`
 const ScrollableContainer = styled.div`
   width: 80%;
   max-width: 800px;
-  height: 400px;
+  height: 80%;
   padding: 20px;
   border: 1px solid #007bff;
   overflow-y: auto;
@@ -185,7 +204,7 @@ const ScrollableContainer = styled.div`
 
 const MyRank = styled.div`
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   width: 80%;
   max-width: 800px;
   padding: 15px;
@@ -194,6 +213,27 @@ const MyRank = styled.div`
   color: white;
   border-radius: 8px;
   font-weight: bold;
+`;
+
+// 프로필 이미지를 위한 스타일 컴포넌트
+const ProfileImage = styled.div`
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  margin-right: 20px;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
+// 랭크 정보를 위한 스타일 컴포넌트
+const RankDetails = styled.div`
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+
   & td {
     color: #ffffff;
   }

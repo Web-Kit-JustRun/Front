@@ -79,7 +79,7 @@ const LessonContainer = () => {
               {announcements.map((announcement) => (
                 <tr key={announcement.id}>
                   <td>{announcement.title}</td>
-                  <td>{announcement.date}</td>
+                  <td style={{ textAlign: "right" }}>{announcement.date}</td>
                 </tr>
               ))}
             </tbody>
@@ -129,10 +129,10 @@ const LessonContainer = () => {
               <tbody>
                 {quizzes.map((quiz) => (
                   <tr key={quiz.quizId}>
+                    <td>{String(quiz.quizId).padStart(4, "0")}</td>
                     <td>{quiz.title}</td>
-                    <td>{new Date(quiz.creationDate).toLocaleDateString()}</td>
                     <td>{getAttemptStatusLabel(quiz.attemptStatus)}</td>
-                    <td>{quiz.attemptStatus}</td>
+                    <td>{new Date(quiz.creationDate).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>

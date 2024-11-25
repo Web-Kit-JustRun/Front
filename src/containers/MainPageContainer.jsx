@@ -18,14 +18,24 @@ const MainPage = () => {
   const { token: authToken, user: userData } = userState;
   const request = useRequest();
 
-  // 로드맵 더미 데이터
-  const roadmap = [
-    { date: "2024-11-21", task: "알고리즘 과제 제출" },
-    { date: "2024-11-22", task: "데이터베이스 시험 준비" },
-    { date: "2024-11-23", task: "운영체제 프로젝트 미팅" },
-    { date: "2024-11-24", task: "수업 정리 및 복습" },
-    { date: "2024-11-25", task: "알고리즘 팀 과제 발표" },
-  ];
+  const generateTimeline = () => {
+    const today = new Date();
+    const timeline = [];
+
+    for (let i = -5; i <= 5; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      timeline.push({
+        date: date.toISOString().split("T")[0], // YYYY-MM-DD 형식
+        task:
+          i === 0 ? "오늘의 주요 일정" : `일정 ${i > 0 ? "D+" + i : "D" + i}`, // 예제 일정
+      });
+    }
+
+    return timeline;
+  };
+
+  const roadmap = generateTimeline();
 
   // 데이터 불러오기
   useEffect(() => {
@@ -65,10 +75,22 @@ const MainPage = () => {
     <Container>
       <Sidebar>
         <h2>일정</h2>
-        {roadmap.map((item, index) => (
-          <p key={index}>{`${item.date}: ${item.task}`}</p>
-        ))}
+        <ul className="timeline">
+          {roadmap.map((item, index) => (
+            <li className="timeline-item" key={index}>
+              <span className="timeline-marker"></span>
+              {index < roadmap.length - 1 && (
+                <span className="timeline-line"></span>
+              )}
+              <div className="timeline-card">
+                <h4>{item.date}</h4>
+                <p>{item.task}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
       </Sidebar>
+
       <Content>
         <CoursesContainer>
           <h3>수업 목록</h3>
@@ -147,16 +169,25 @@ export default MainPage;
 const Container = styled.div`
   display: flex;
   height: 100vh;
-  background-color: #f9f9f9;
   font-family: "Arial", sans-serif;
 `;
 
 const Sidebar = styled.div`
   width: 20%;
-  background-color: #ffffff;
+  position: relative;
+  top: 20px;
+  height: calc(100vh - 80px);
   padding: 20px;
+  background-color: #ffffff;
   border-right: 1px solid #e0e0e0;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* 넘칠 경우 스크롤 활성화 */
+  -ms-overflow-style: none; /* IE 및 Edge에서 스크롤바 숨기기 */
+  scrollbar-width: none; /* Firefox에서 스크롤바 숨기기 */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome 및 Safari에서 스크롤바 숨기기 */
+  }
 
   h2 {
     font-size: 20px;
@@ -164,14 +195,61 @@ const Sidebar = styled.div`
     margin-bottom: 15px;
   }
 
-  p {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 10px;
+  /* 타임라인 스타일 */
+  .timeline {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .timeline-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .timeline-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .timeline-marker {
+    width: 12px;
+    height: 12px;
+    background-color: #007bff;
+    border-radius: 50%;
+    position: relative;
+    margin-right: 20px;
+  }
+
+  .timeline-line {
+    width: 2px;
+    background-color: #007bff;
+    position: absolute;
+    top: 0;
+    left: 5px;
+    bottom: 0;
+  }
+
+  .timeline-card {
+    flex: 1;
+    background-color: #f9f9f9;
     padding: 10px;
-    background-color: #f4f4f4;
     border-radius: 5px;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #555;
+    font-size: 14px;
+  }
+
+  .timeline-card h4 {
+    margin: 0 0 5px;
+    font-size: 16px;
+    color: #333;
+  }
+
+  .timeline-card p {
+    margin: 0;
+    font-size: 14px;
   }
 `;
 
@@ -194,6 +272,9 @@ const Content = styled.div`
 
 const RankingSidebar = styled.div`
   width: 20%;
+  height: calc(100vh - 80px);
+  position: relative;
+  top: 20px;
   background-color: #ffffff;
   padding: 20px;
   border-left: 1px solid #e0e0e0;

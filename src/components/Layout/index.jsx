@@ -21,8 +21,7 @@ const Layout = ({ children, layoutType }) => {
       <ContentWrapper>
         {layoutType === "lesson" && (
           <NavBar>
-            <Navbar courseName={currentLesson?.courseName ?? "강의"} />{" "}
-            {/* courseName 전달 */}
+            <Navbar courseName={currentLesson?.courseName ?? "강의"} />
           </NavBar>
         )}
         {(layoutType === "store" || layoutType === "purchaseList") && (
@@ -40,22 +39,25 @@ const LayoutWrapper = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: #f0f8ff; /* 밝은 블루 배경 */
 `;
 
 const HeaderWrapper = styled.div`
   width: 100%;
-  height: 100px;
+  height: 80px;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1;
+  background-color: #005fa3; /* 헤더의 진한 블루 */
+  color: #ffffff;
 `;
 
 const ContentWrapper = styled.div`
   display: flex;
   flex-direction: row;
   flex: 1;
-  margin-top: 100px;
+  margin-top: 80px; /* 헤더 높이 */
 `;
 
 const NavBar = styled.div`
@@ -65,17 +67,20 @@ const NavBar = styled.div`
   top: 80px;
   left: 0;
   overflow-y: auto;
-  background-color: #f5f5f5;
+  background-color: #0077cc; /* 네비게이션 블루 */
+  color: #ffffff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 `;
 
 const StoreSideBarWrapper = styled.div`
   width: 240px;
-  height: calc(100vh - 0px);
+  height: calc(100vh - 80px);
   position: fixed;
   top: 80px;
   left: 0;
   overflow-y: auto;
-  background-color: #e0e0e0;
+  background-color: #e0eefe; /* 밝은 블루 */
+  color: #333;
 `;
 
 const ContentArea = styled.main`

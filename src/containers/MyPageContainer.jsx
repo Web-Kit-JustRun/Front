@@ -10,6 +10,25 @@ import platinum from "../img/rank/platinum.png";
 import gold from "../img/rank/gold.png";
 import silver from "../img/rank/silver.png";
 import bronze from "../img/rank/bronze.png";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(
+  LineElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
+  Tooltip,
+  Legend,
+);
 
 const MyPageContainer = () => {
   const navigate = useNavigate();
@@ -29,10 +48,12 @@ const MyPageContainer = () => {
         const coursesData = await request(
           `/api/users/${userId}/courses`,
           "GET",
+          null,
+          {},
         );
         setCourses(coursesData);
       } catch (error) {
-        console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
+        console.error("Error fetching courses:", error);
       }
     };
 
@@ -42,10 +63,10 @@ const MyPageContainer = () => {
   useEffect(() => {
     const fetchStudentNumber = async () => {
       try {
-        const data = await request(`/api/users/profile`, "GET");
+        const data = await request(`/api/users/profile`, "GET", null, {});
         setStudentNumber(data.studentNumber);
       } catch (error) {
-        console.error("Failed to fetch user profile data:", error);
+        console.error("Failed to fetch user profile:", error);
       }
     };
 
@@ -55,20 +76,20 @@ const MyPageContainer = () => {
   useEffect(() => {
     const fetchUserRanking = async () => {
       try {
-        const data = await request(`/api/users/${userId}/ranking`, "GET");
-        setUserRanking(data);
+        const userRankingData = await request(
+          `/api/users/${userId}/ranking`,
+          "GET",
+          null,
+          {},
+        );
+        setUserRanking(userRankingData);
       } catch (error) {
-        console.error("Failed to fetch user ranking data:", error);
+        console.error("Failed to fetch ranking data:", error);
       }
     };
 
     fetchUserRanking();
   }, [userId, request]);
-
-  const goToLessonPage = (courseId) => {
-    setCurrentLessonId(courseId);
-    navigate(`/lesson`);
-  };
 
   const getTierIcon = (percentage) => {
     if (percentage <= 20) return diamond;
@@ -78,6 +99,11 @@ const MyPageContainer = () => {
     return bronze;
   };
 
+  const goToLessonPage = (courseId) => {
+    setCurrentLessonId(courseId);
+    navigate(`/lesson`);
+  };
+
   if (!userRanking) {
     return <Loading>Loading...</Loading>;
   }
@@ -85,12 +111,84 @@ const MyPageContainer = () => {
   const { rankingPoints, rankingPercentage } = userRanking;
   const formattedPercentage = Math.floor(rankingPercentage * 100) / 100;
 
+  // 표준 정규분포 데이터 생성
+  const generateNormalDistribution = (mean, stdDev, size) => {
+    const data = [];
+    const step = (6 * stdDev) / size; // 범위를 size 개수로 나눔
+    for (let i = 0; i <= size; i++) {
+      const x = mean - 3 * stdDev + i * step;
+      const y =
+        (1 / (stdDev * Math.sqrt(2 * Math.PI))) *
+        Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
+      data.push({ x, y });
+    }
+    return data;
+  };
+
+  const mean = 50;
+  const stdDev = 15;
+  const distributionData = generateNormalDistribution(mean, stdDev, 1000); // 데이터 포인트 수를 1000개로 증가
+
+  // 사용자의 y 값 계산
+  const userX = formattedPercentage;
+  const userY =
+    (1 / (stdDev * Math.sqrt(2 * Math.PI))) *
+    Math.exp(-0.5 * Math.pow((userX - mean) / stdDev, 2));
+
+  const chartData = {
+    datasets: [
+      {
+        label: "Normal Distribution",
+        data: distributionData, // { x, y } 형태의 데이터 사용
+        borderColor: "rgba(75, 192, 192, 1)",
+        fill: false,
+        pointRadius: 0,
+        borderWidth: 2,
+        parsing: false, // x, y 값 그대로 사용
+      },
+      {
+        label: "Your Rank",
+        data: [{ x: userX, y: userY }],
+        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 99, 132, 1)",
+        pointRadius: 5,
+        type: "scatter",
+        parsing: false,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+    },
+    scales: {
+      x: {
+        type: "linear",
+        title: {
+          display: true,
+          text: "Rank Percentage (%)",
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Probability Density",
+        },
+        beginAtZero: true,
+      },
+    },
+  };
+
   return (
     <MyPageContainerBlock>
       <LeftSection>
         <ProfileSection>
           <ProfileImage>
-            <img src={getTierIcon(formattedPercentage)} alt="티어 아이콘" />
+            <img src={getTierIcon(formattedPercentage)} alt="Tier Icon" />
           </ProfileImage>
           <ProfileDetails>
             <UserName>{name}</UserName>
@@ -101,6 +199,10 @@ const MyPageContainer = () => {
             </UserRank>
           </ProfileDetails>
         </ProfileSection>
+        <ChartContainer>
+          <h2>Rank Distribution</h2>
+          <Line data={chartData} options={chartOptions} />
+        </ChartContainer>
         <RightSection>
           <CoursesContainer>
             <h3>수업 목록</h3>
@@ -296,4 +398,18 @@ const Loading = styled.div`
   color: #333;
   text-align: center;
   margin-top: 20px;
+`;
+
+const ChartContainer = styled.div`
+  width: 100%;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
 `;
