@@ -18,6 +18,19 @@ const LessonContainer = () => {
   const { token: authToken, user: userData } = userState;
   const request = useRequest();
 
+  const getAttemptStatusLabel = (status) => {
+    switch (status) {
+      case "correct":
+        return "정답";
+      case "incorrect":
+        return "오답";
+      case "not_attempted":
+        return "풀지 않은 문제";
+      default:
+        return "알 수 없음";
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -118,6 +131,8 @@ const LessonContainer = () => {
                   <tr key={quiz.quizId}>
                     <td>{quiz.title}</td>
                     <td>{new Date(quiz.creationDate).toLocaleDateString()}</td>
+                    <td>{getAttemptStatusLabel(quiz.attemptStatus)}</td>
+                    <td>{quiz.attemptStatus}</td>
                   </tr>
                 ))}
               </tbody>
@@ -139,14 +154,14 @@ const LessonBlock = styled.div`
   align-items: center;
   padding: 10px;
   background-color: #f9fafb;
-  width: 80%;
+  width: 100%;
 `;
 
 const ContentSection = styled.div`
-  width: 70%;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 50px;
 `;
 
 const Card = styled.div`

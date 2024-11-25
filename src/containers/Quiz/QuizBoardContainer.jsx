@@ -1,34 +1,43 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
+import { currentLessonIdStore } from "../../store/lessonStore";
+import { userStore } from "../../store/userStore";
 import { useRequest } from "../../utils/useRequest";
+import { currentQuizIdStore } from "../../store/quizStore";
 
-const MyQuizContainer = () => {
+const QuizBoard = () => {
+  const [quizzes, setQuizzes] = useState([]);
+  const currentLessonId = useRecoilValue(currentLessonIdStore);
+  const [currentQuizId, setCurrentQuizId] = useRecoilState(currentQuizIdStore);
+  const userState = useRecoilValue(userStore);
+  const { user: userData } = userState;
   const navigate = useNavigate();
   const request = useRequest();
-  const [quizzes, setQuizzes] = useState([]);
-  const courseId = 1;
 
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const data = await request(`/api/courses/${courseId}/quizzes`, "GET");
-
+        const data = await request(
+          `/api/courses/${currentLessonId}/quizzes`,
+          "GET",
+        );
         data && setQuizzes(data);
       } catch (error) {
-        console.error("퀴즈 데이터를 불러오는 중 오류 발생:", error);
+        console.error("Error fetching quizzes:", error);
       }
     };
-
     fetchQuizzes();
-  }, [request]);
+  }, [currentLessonId, request]);
 
   const handleRowClick = (quiz) => {
-    navigate("/solvequiz", { state: { quiz } });
+    setCurrentQuizId(quiz.quizId); // 퀴즈 ID 저장
+    navigate("/solvequiz");
   };
 
-  const handleMyQuizzesClick = () => {
-    navigate("/myquiz");
+  const handleQuizApprovalClick = () => {
+    navigate("/quizapprovelist"); // 퀴즈 허가 목록 페이지로 이동
   };
 
   const getAttemptStatusLabel = (status) => {
@@ -38,7 +47,7 @@ const MyQuizContainer = () => {
       case "incorrect":
         return "오답";
       case "not_attempted":
-        return "미풀이";
+        return "풀지 않은 문제";
       default:
         return "알 수 없음";
     }
@@ -49,27 +58,33 @@ const MyQuizContainer = () => {
       <BoardHeader>
         <Title>퀴즈 게시판</Title>
         <ButtonGroup>
-          <RegisterButton onClick={() => navigate("/quizzes/add")}>
+          <RegisterButton
+            onClick={() => {
+              navigate("/quizzes/add");
+            }}
+          >
             등록하기
           </RegisterButton>
-          <MyQuizzesButton onClick={handleMyQuizzesClick}>
-            내가 만든 문제
-          </MyQuizzesButton>
+          {userData.userType === "professor" && (
+            <QuizApprovalButton onClick={handleQuizApprovalClick}>
+              퀴즈 허가 목록 조회
+            </QuizApprovalButton>
+          )}
         </ButtonGroup>
       </BoardHeader>
-      {quizzes.length > 0 ? (
-        <ScrollableContainer>
-          <Table>
-            <thead>
-              <tr>
-                <TableHeader>문제 ID</TableHeader>
-                <TableHeader>제목</TableHeader>
-                <TableHeader>생성 날짜</TableHeader>
-                <TableHeader>풀이 상태</TableHeader>
-              </tr>
-            </thead>
-            <tbody>
-              {quizzes.map((quiz) => (
+      <ScrollableContainer>
+        <Table>
+          <thead>
+            <tr>
+              <TableHeader>문제 ID</TableHeader>
+              <TableHeader>제목</TableHeader>
+              <TableHeader>풀이 상태</TableHeader>
+              <TableHeader>생성 날짜</TableHeader>
+            </tr>
+          </thead>
+          <tbody>
+            {quizzes && quizzes.length > 0 ? (
+              quizzes.map((quiz) => (
                 <TableRow
                   key={quiz.quizId}
                   onClick={() => handleRowClick(quiz)}
@@ -77,24 +92,28 @@ const MyQuizContainer = () => {
                   <TableCell>{quiz.quizId}</TableCell>
                   <TableCell>{quiz.title}</TableCell>
                   <TableCell>
-                    {new Date(quiz.creationDate).toLocaleDateString("ko-KR")}
+                    {getAttemptStatusLabel(quiz.attemptStatus)}
                   </TableCell>
                   <TableCell>
-                    {getAttemptStatusLabel(quiz.attempt_status)}
+                    {new Date(quiz.creationDate).toLocaleDateString("ko-KR")}
                   </TableCell>
                 </TableRow>
-              ))}
-            </tbody>
-          </Table>
-        </ScrollableContainer>
-      ) : (
-        <Loading>불러올 데이터가 없습니다.</Loading>
-      )}
+              ))
+            ) : (
+              <tr>
+                <TableCell colSpan="4" style={{ textAlign: "center" }}>
+                  퀴즈가 없습니다.
+                </TableCell>
+              </tr>
+            )}
+          </tbody>
+        </Table>
+      </ScrollableContainer>
     </BoardContainer>
   );
 };
 
-export default MyQuizContainer;
+export default QuizBoard;
 
 // Styled Components
 const BoardContainer = styled.div`
@@ -126,31 +145,30 @@ const ButtonGroup = styled.div`
 `;
 
 const RegisterButton = styled.button`
-  padding: 12px 24px;
+  padding: 10px 20px;
   font-size: 16px;
-  color: #fff;
+  color: white;
   background-color: #007bff;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: #0056b3;
   }
 `;
 
-const MyQuizzesButton = styled.button`
-  padding: 12px 24px;
+const QuizApprovalButton = styled.button`
+  padding: 10px 20px;
   font-size: 16px;
-  color: #fff;
-  background-color: #28a745;
+  color: white;
+  background-color: #6c757d;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: #218838;
+    background-color: #5a6268;
   }
 `;
 
@@ -177,12 +195,10 @@ const TableHeader = styled.th`
 `;
 
 const TableRow = styled.tr`
+  cursor: pointer;
+
   &:nth-child(even) {
     background-color: #f2f2f2;
-  }
-
-  &:hover {
-    background-color: #f1f1f1;
   }
 `;
 
@@ -190,10 +206,4 @@ const TableCell = styled.td`
   padding: 10px;
   border: 1px solid #ddd;
   text-align: left;
-`;
-
-const Loading = styled.div`
-  margin-top: 20px;
-  font-size: 16px;
-  color: gray;
 `;

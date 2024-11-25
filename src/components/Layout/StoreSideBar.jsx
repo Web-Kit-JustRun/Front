@@ -14,9 +14,7 @@ const StoreSideBar = ({ layoutType }) => {
   // console.log("🚀 ~ StoreSideBar ~ userId:", userId)
   const [rewardPoints, setRewardPoints] = useState(null); // 리워드 포인트 상태
   const request = useRequest();
-  
 
-  
   // 리워드 포인트 가져오기
   useEffect(() => {
     const fetchRewardPoints = async () => {
@@ -28,14 +26,10 @@ const StoreSideBar = ({ layoutType }) => {
         setRewardPoints("N/A"); // 오류 시 기본값 설정
       }
     };
-    
     if (userId) {
       fetchRewardPoints(); // 사용자 ID가 있을 경우 API 호출
     }
   }, [request, userId]);
-  
-  // console.log("🚀 ~ StoreSideBar ~ rewardPoints:", rewardPoints)
-  
 
   // 메뉴 클릭 시 상태 업데이트
   const handleMenuClick = (menu) => {
@@ -53,8 +47,12 @@ const StoreSideBar = ({ layoutType }) => {
       <WholeMenuButton onClick={() => handleMenuClick("")}>
         전체메뉴
       </WholeMenuButton>
-      <MenuButton onClick={() => handleMenuClick("frankburger")}>프랭크버거</MenuButton>
-      <MenuButton onClick={() => handleMenuClick("bookcafe")}>북카페</MenuButton>
+      <MenuButton onClick={() => handleMenuClick("frankburger")}>
+        프랭크버거
+      </MenuButton>
+      <MenuButton onClick={() => handleMenuClick("bookcafe")}>
+        북카페
+      </MenuButton>
       <MenuButton onClick={() => handleMenuClick("study")}>수업</MenuButton>
       {layoutType === "store" ? (
         <StorePurchaseButton

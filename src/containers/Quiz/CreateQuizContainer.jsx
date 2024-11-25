@@ -21,8 +21,11 @@ const CreateQuizContainer = () => {
     setChoices(updatedChoices);
   };
 
+  const handleChoiceSelection = (index) => {
+    setCorrectChoice(index + 1); // 보기 번호(1부터 시작)를 저장
+  };
   const handleSubmit = async () => {
-    // 유효성 검사 (선택 사항)
+    // 유효성 검사
     if (
       !title ||
       !question ||
@@ -34,14 +37,15 @@ const CreateQuizContainer = () => {
     }
 
     try {
-      const response = await request(
-        `/api/courses/${currentLessonId}/quizzes`,
+      // 요청 전송
+      await request(
+        `/api/courses/${currentLessonId}/quizzes/add`,
         "POST",
         {
           title: title,
           question: question,
           choices: choices,
-          correct_choice: correctChoice,
+          correctChoice: correctChoice,
         },
         {
           headers: {
@@ -51,13 +55,21 @@ const CreateQuizContainer = () => {
         },
       );
 
-      if (response.status === 201) {
-        alert("퀴즈가 성공적으로 등록되었습니다.");
-        navigate("/myquiz"); // 등록 후 이동
-      }
+      alert("퀴즈가 성공적으로 등록되었습니다.");
+      navigate("/myquiz");
     } catch (error) {
       console.error("Error submitting quiz:", error);
-      alert("퀴즈 등록 중 오류가 발생했습니다.");
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        alert(
+          `퀴즈 등록 중 오류가 발생했습니다: ${error.response.data.message}`,
+        );
+      } else {
+        alert("퀴즈 등록 중 오류가 발생했습니다.");
+      }
     }
   };
 
@@ -85,8 +97,8 @@ const CreateQuizContainer = () => {
             <input
               type="radio"
               name="correctChoice"
-              checked={correctChoice === index}
-              onChange={() => setCorrectChoice(index)}
+              checked={correctChoice === index + 1} // 번호(1부터 시작) 비교
+              onChange={() => handleChoiceSelection(index)}
             />
           </ChoiceRow>
         ))}

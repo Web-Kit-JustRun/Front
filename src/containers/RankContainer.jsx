@@ -21,23 +21,16 @@ const RankContainer = () => {
     const fetchRankingData = async () => {
       try {
         const topRankingPromise = request("/api/ranking/top", "GET");
-        // console.log(
-        // "🚀 ~ fetchRankingData ~ topRankingPromise:",
-        // topRankingPromise,
-        // );
         const userRankingPromise = request(
           `/api/users/${userData.user.userId}/ranking`,
           "GET",
         );
-        // console.log(
-        // "🚀 ~ fetchRankingData ~ userRankingPromise:",
-        // userRankingPromise,
-        // );
 
         const [topRankingResult, userRankingResult] = await Promise.allSettled([
           topRankingPromise,
           userRankingPromise,
         ]);
+
         if (topRankingResult.status === "fulfilled") {
           setTop100(topRankingResult.value);
         }
@@ -52,9 +45,8 @@ const RankContainer = () => {
     };
 
     fetchRankingData();
-  }, [request, userData.token, userData.user.userId]);
+  }, [request, userData.user.userId]);
 
-  // console.log("🚀 ~ RankContainer ~ userRank:", userRank);
   return (
     <RankContainerBlock>
       <TitleContainer>
@@ -64,7 +56,7 @@ const RankContainer = () => {
           onMouseLeave={() => setShowTooltip(false)}
         >
           <FontAwesomeIcon icon={faInfoCircle} />
-          {showTooltip && <Tooltip>랭크는 매 학기마다 초기화 됩니다.</Tooltip>}
+          {showTooltip && <Tooltip>랭크는 매 학기마다 초기화됩니다.</Tooltip>}
         </InfoIcon>
       </TitleContainer>
       {userRank && (
@@ -101,7 +93,6 @@ const RankContainer = () => {
 export default RankContainer;
 
 // 스타일 컴포넌트
-
 const RankContainerBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -121,6 +112,7 @@ const TitleContainer = styled.div`
 
 const Title = styled.h1`
   font-size: 2.5rem;
+  color: #007bff;
 `;
 
 const InfoIcon = styled.div`
@@ -130,7 +122,7 @@ const InfoIcon = styled.div`
   cursor: pointer;
 
   &:hover {
-    color: #333;
+    color: #0056b3;
   }
 `;
 
@@ -139,7 +131,7 @@ const Tooltip = styled.div`
   top: -30px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #333;
+  background-color: #007bff;
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
@@ -152,7 +144,7 @@ const RankTable = styled.table`
   width: 100%;
   max-width: 800px;
   background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;
 `;
@@ -164,10 +156,12 @@ const RankHeader = styled.tr`
 `;
 
 const RankRow = styled.tr`
-  border-bottom: 1px solid #e0e0e0;
+  &:nth-child(even) {
+    background-color: #f0f8ff;
+  }
 
-  &:last-child {
-    border-bottom: none;
+  &:hover {
+    background-color: #e3f2fd;
   }
 `;
 
@@ -175,6 +169,7 @@ const RankCell = styled.td`
   width: 33.33%;
   text-align: center;
   padding: 10px 0;
+  color: #333;
 `;
 
 const ScrollableContainer = styled.div`
@@ -182,9 +177,10 @@ const ScrollableContainer = styled.div`
   max-width: 800px;
   height: 400px;
   padding: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #007bff;
   overflow-y: auto;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
+  border-radius: 8px;
 `;
 
 const MyRank = styled.div`
@@ -197,4 +193,8 @@ const MyRank = styled.div`
   background-color: #007bff;
   color: white;
   border-radius: 8px;
+  font-weight: bold;
+  & td {
+    color: #ffffff;
+  }
 `;

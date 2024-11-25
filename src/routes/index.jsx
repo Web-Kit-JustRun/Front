@@ -13,10 +13,12 @@ import AssignmentSubmitBoard from "../pages/Assignment/AssignmentSubmitBoard";
 import CreateQuizContainer from "../containers/Quiz/CreateQuizContainer";
 import SolveQuiz from "../pages/Quiz/SolveQuiz";
 import MyQuiz from "../pages/Quiz/MyQuiz";
-import QuizBoard from "../containers/QuizBoardContainer";
 import MyPage from "../pages/MyPage";
 import ChangePw from "../pages/ChangePw";
 import AssignmentDetailBoard from "../pages/Assignment/AssignmentDetailBoard";
+import { elements } from "chart.js";
+import QuizApprovalBoard from "../pages/QuizApprovalBoard";
+import QuizBoard from "../containers/Quiz/QuizBoardContainer";
 
 // 기본 틀임. 로그인 회원가입은 고정된 레이아웃이 없을거라 여기(사실 역할별로 나눈거)
 const publicRoutes = [
@@ -63,6 +65,8 @@ const authenticatedRoutes = [
   { path: "/solvequiz", element: <SolveQuiz />, layoutType: "lesson" },
   //내가 등록한 퀴즈 조회
   { path: "/myquiz", element: <MyQuiz />, layoutType: "lesson" },
+
+  { path: "/quizapprovelist", element: <QuizApprovalBoard/>, layoutType: "lesson"},
   //과제 페이지
   { path: "/assignments", element: <AssignmentBoard />, layoutType: "lesson" },
   {
