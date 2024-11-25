@@ -89,7 +89,7 @@ const QuizBoard = () => {
                   key={quiz.quizId}
                   onClick={() => handleRowClick(quiz)}
                 >
-                  <TableCell>{quiz.quizId}</TableCell>
+                  <TableCell>{String(quiz.quizId).padStart(4, "0")}</TableCell>
                   <TableCell>{quiz.title}</TableCell>
                   <TableCell>
                     {getAttemptStatusLabel(quiz.attemptStatus)}
