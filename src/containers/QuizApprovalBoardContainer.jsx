@@ -1,31 +1,90 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { useRequest } from "../utils/useRequest";
 import { currentLessonIdStore } from "../store/lessonStore";
+import { atomOneLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import SyntaxHighlighter from "react-syntax-highlighter";
 
 const QuizApprovalBoardContainer = () => {
   const [quizzes, setQuizzes] = useState([]);
+  const [selectedDifficulty, setSelectedDifficulty] = useState({});
   const currentLessonId = useRecoilValue(currentLessonIdStore);
 
   const request = useRequest();
 
-  useEffect(() => {
-    const fetchQuizzes = async () => {
-      try {
-        const data = await request(
-          `/api/courses/${currentLessonId}/quizzes/pending`,
-          "GET",
-        );
+  const fetchQuizzes = useCallback(async () => {
+    try {
+      const data = await request(
+        `/api/courses/${currentLessonId}/quizzes/pending`,
+        "GET",
+      );
 
-        data && setQuizzes(data);
+      if (data) {
+        setQuizzes(data);
         console.log(data);
-      } catch (error) {
-        console.error("Error fetching quizzes:", error);
       }
-    };
-    fetchQuizzes();
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+    }
   }, [currentLessonId, request]);
+
+  // useEffect로 fetchQuizzes 호출
+  useEffect(() => {
+    fetchQuizzes();
+  }, [fetchQuizzes]);
+  const handleQuizApproval = async (quizId, isApprove) => {
+    const points =
+      isApprove === "approve" ? selectedDifficulty[quizId] || null : null;
+
+    if (isApprove === "approve" && points === null) {
+      alert("난이도를 선택해주세요.");
+      return;
+    }
+
+    try {
+      const payload = {
+        isApprove,
+        points,
+      };
+
+      const response = await request(
+        `/api/quizzes/${quizId}/approve`,
+        "POST",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (response.status === 200) {
+        alert(response.data.message);
+
+        // 상태 업데이트: 승인/거절된 퀴즈를 리스트에서 제거
+
+        fetchQuizzes();
+
+        // 선택된 난이도 초기화
+        setSelectedDifficulty((prev) => {
+          const updated = { ...prev };
+          delete updated[quizId];
+          return updated;
+        });
+      }
+    } catch (error) {
+      console.error("Error approving/rejecting quiz:", error);
+      alert("처리 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleDifficultySelection = (quizId, points) => {
+    setSelectedDifficulty((prev) => ({
+      ...prev,
+      [quizId]: points,
+    }));
+  };
 
   return (
     <BoardContainer>
@@ -40,18 +99,60 @@ const QuizApprovalBoardContainer = () => {
               <QuizTitle>{quiz.title}</QuizTitle>
               <QuizAuthor>작성자: {quiz.author}</QuizAuthor>
             </QuizHeader>
-            <QuizContent>{quiz.content}</QuizContent>
-            {/* <Choices>
+            <QuizContent>
+              <SyntaxHighlighter
+                language="plaintext"
+                style={atomOneLight}
+                customStyle={{
+                  backgroundColor: "#f8f9fa", // 배경색
+                  padding: "10px", // 내부 여백
+                  borderRadius: "5px", // 모서리 둥글기
+                  fontSize: "1rem", // 글꼴 크기
+                  lineHeight: "1.5", // 줄 간격
+                }}
+              >
+                {quiz.question}
+              </SyntaxHighlighter>
+            </QuizContent>
+            <Choices>
               {quiz.choices.map((choice, index) => (
                 <Choice key={index} isCorrect={index === quiz.correctChoice}>
                   {choice} {index === quiz.correctChoice && "(정답)"}
                 </Choice>
               ))}
-            </Choices> */}
+            </Choices>
+            <DifficultyContainer>
+              <DifficultyButton
+                selected={selectedDifficulty[quiz.quizId] === 300}
+                onClick={() => handleDifficultySelection(quiz.quizId, 300)}
+              >
+                상 (300pt)
+              </DifficultyButton>
+              <DifficultyButton
+                selected={selectedDifficulty[quiz.quizId] === 200}
+                onClick={() => handleDifficultySelection(quiz.quizId, 200)}
+              >
+                중 (200pt)
+              </DifficultyButton>
+              <DifficultyButton
+                selected={selectedDifficulty[quiz.quizId] === 100}
+                onClick={() => handleDifficultySelection(quiz.quizId, 100)}
+              >
+                하 (100pt)
+              </DifficultyButton>
+            </DifficultyContainer>
             <Actions>
-              <Points>{quiz.points}pt</Points>
-              <ActionButton approve>허가</ActionButton>
-              <ActionButton>거절</ActionButton>
+              <ActionButton
+                approve
+                onClick={() => handleQuizApproval(quiz.quizId, "approve")}
+              >
+                허가
+              </ActionButton>
+              <ActionButton
+                onClick={() => handleQuizApproval(quiz.quizId, "reject")}
+              >
+                거절
+              </ActionButton>
             </Actions>
           </QuizItem>
         ))}
@@ -129,35 +230,58 @@ const QuizContent = styled.p`
 
 const Choices = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between; /* 버튼 간 간격 유지 */
   margin: 10px 0;
+  width: 90%; /* QuizList의 90% */
+  margin: 10px auto; /* 수평 가운데 정렬 */
 `;
 
 const Choice = styled.div`
-  padding: 10px;
+  flex: 1; /* 각 버튼이 동일한 비율로 공간 차지 */
+  margin: 0 2.5px; /* 양쪽에 2.5px 간격으로 설정 (총 5px 간격) */
+  padding: 0 10px; /* 텍스트 간격 */
   background-color: ${(props) => (props.isCorrect ? "#d4edfa" : "#f8f9fa")};
   color: ${(props) => (props.isCorrect ? "#007bff" : "#333")};
   border: 1px solid ${(props) => (props.isCorrect ? "#bee3f8" : "#ddd")};
   border-radius: 5px;
   font-size: 0.9rem;
   text-align: center;
+  height: 30px; /* 버튼 높이 */
+  line-height: 30px; /* 텍스트 세로 정렬 */
   transition: background-color 0.3s;
   &:hover {
     background-color: ${(props) => (props.isCorrect ? "#cfe2ff" : "#e9ecef")};
   }
 `;
 
-const Actions = styled.div`
+const DifficultyContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end; /* 오른쪽 정렬 */
   align-items: center;
   margin-top: 10px;
+  gap: 10px; /* 버튼 간 10px 간격 */
 `;
-
-const Points = styled.div`
+const DifficultyButton = styled.button`
+  padding: 10px 20px;
   font-size: 0.9rem;
-  color: #007bff;
-  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  background-color: ${(props) => (props.selected ? "#007bff" : "#f8f9fa")};
+  color: ${(props) => (props.selected ? "white" : "#333")};
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  &:hover {
+    background-color: ${(props) => (props.selected ? "#0056b3" : "#e9ecef")};
+  }
+`;
+const Actions = styled.div`
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px; /* 버튼 간 10px 간격 */
 `;
 
 const ActionButton = styled.button`

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { currentLessonIdStore } from "../../store/lessonStore";
 import { userStore } from "../../store/userStore";
 import { useRequest } from "../../utils/useRequest";
+import { currentQuizIdStore } from "../../store/quizStore";
 
 const QuizBoard = () => {
   const [quizzes, setQuizzes] = useState([]);
   const currentLessonId = useRecoilValue(currentLessonIdStore);
+  const [currentQuizId, setCurrentQuizId] = useRecoilState(currentQuizIdStore);
   const userState = useRecoilValue(userStore);
   const { user: userData } = userState;
   const navigate = useNavigate();
@@ -21,7 +23,6 @@ const QuizBoard = () => {
           `/api/courses/${currentLessonId}/quizzes`,
           "GET",
         );
-
         data && setQuizzes(data);
       } catch (error) {
         console.error("Error fetching quizzes:", error);
@@ -31,7 +32,8 @@ const QuizBoard = () => {
   }, [currentLessonId, request]);
 
   const handleRowClick = (quiz) => {
-    navigate("/solvequiz", { state: { quiz } }); // 퀴즈 데이터를 state로 전달
+    setCurrentQuizId(quiz.quizId); // 퀴즈 ID 저장
+    navigate("/solvequiz");
   };
 
   const handleQuizApprovalClick = () => {
