@@ -5,27 +5,31 @@ import { useRequest } from "../../utils/useRequest";
 
 export default function AssignmentSubmitBoard() {
   const [assignmentDetail, setAssignmentDetail] = useState(null);
-  const params = useParams();
+  const params = useParams(); // URL에서 id 가져오기
   const fileInputRef = useRef();
   const [selectedFiles, setSelectedFiles] = useState([]);
   const request = useRequest();
 
   useEffect(() => {
     async function fetchAssignmentDetail() {
-      const assignmentId = params.id;
+      if (!params.id) {
+        console.error("Assignment ID is missing in the URL.");
+        return;
+      }
 
-      const data = await request(
-        process.env.REACT_APP_HOST_URL + `/api/assignments/${assignmentId}`,
-        "GET",
-      );
-
-      setAssignmentDetail(data);
+      try {
+        console.log(`Fetching assignment detail for ID: ${params.id}`);
+        const data = await request(`/api/assignments/${params.id}`, "GET");
+        setAssignmentDetail(data);
+      } catch (error) {
+        console.error("Error fetching assignment detail:", error);
+      }
     }
 
     fetchAssignmentDetail();
   }, [params.id, request]);
 
-  if (!assignmentDetail) return null;
+  if (!assignmentDetail) return <p>Loading...</p>;
 
   const handleDownload = (file) => {
     const fileURL = URL.createObjectURL(file);
@@ -121,6 +125,7 @@ export default function AssignmentSubmitBoard() {
   );
 }
 
+// Styled Components
 const FileUploadBox = styled.div`
   & > input[type="file"] {
     display: none;

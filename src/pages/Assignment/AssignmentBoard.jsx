@@ -47,9 +47,9 @@ export default function AssignmentBoard() {
   return (
     <Layout>
       <Header>
-        <p>과제</p>
+        <Title>과제 목록</Title>
         {user && user.userType === "professor" && (
-          <button className="assignmentAddButton">과제 생성</button>
+          <AddButton>과제 생성</AddButton>
         )}
       </Header>
       <Table>
@@ -63,69 +63,98 @@ export default function AssignmentBoard() {
             >
               <p>{assignment.title}</p>
               <div>
-                <p>기한 {new Date(assignment.dueDate).toLocaleDateString()}</p>
-                <p>
+                <p>기한: {new Date(assignment.dueDate).toLocaleDateString()}</p>
+                <Score>
                   {assignment.student_score ?? 0}/{assignment.score ?? 0}
-                </p>
+                </Score>
               </div>
             </TableCell>
           ))
         ) : (
-          <p>과제가 없습니다.</p>
+          <EmptyMessage>과제가 없습니다.</EmptyMessage>
         )}
       </Table>
     </Layout>
   );
 }
 
-const ErrorParagraph = styled.p`
-  color: red;
-`;
-
-const TableCell = styled.div`
-  padding: 10px;
-  & > div {
-    display: flex;
-    gap: 30px;
-    cursor: pointer;
-  }
-  border-bottom: 1px solid #dedede;
-  & p {
-    margin: 10px 0;
-  }
-  &:hover {
-    background: #dedede;
-  }
-`;
-
+// Styled Components
 const Layout = styled.div`
-  padding: 0 40px;
-`;
-
-const Table = styled.div`
-  /* display: grid;
-  grid-template-columns: 1fr 200px 30px; */
-
-  & * {
-    white-space: nowrap;
-  }
+  padding: 20px 40px;
+  background-color: #f7faff;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
 `;
 
 const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  & > :not(.assignmentAddButton) {
-    font-size: 30px;
+  margin-bottom: 20px;
+`;
+
+const Title = styled.h1`
+  font-size: 28px;
+  color: #003366;
+  margin: 0;
+`;
+
+const AddButton = styled.button`
+  font-size: 16px;
+  border: none;
+  background: #003366;
+  color: #fff;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background: #0055b3;
   }
-  & > .assignmentAddButton {
-    font-size: 20px;
-    border: none;
-    background: orange;
-    color: white;
-    border-radius: 10px;
-    padding: 5px 10px;
-    cursor: pointer;
+`;
+
+const Table = styled.div`
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+`;
+
+const TableCell = styled.div`
+  padding: 15px;
+  border-bottom: 1px solid #ececec;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  & > div {
+    display: flex;
+    justify-content: space-between;
   }
+
+  &:hover {
+    background: #e6f2ff;
+  }
+
+  p {
+    margin: 5px 0;
+    color: #003366;
+  }
+`;
+
+const Score = styled.p`
+  font-weight: bold;
+  color: #0077cc;
+`;
+
+const ErrorParagraph = styled.p`
+  color: #ff3333;
+  font-size: 16px;
+  text-align: center;
+`;
+
+const EmptyMessage = styled.p`
+  color: #999;
+  text-align: center;
+  font-size: 16px;
+  margin: 20px 0;
 `;
