@@ -13,7 +13,7 @@ const Lesson = () => {
 };
 
 const LessonPageBlock = styled.div`
-  height: 100vh;
+  height: calc(100vh - 120px);
   display: flex;
   justify-content: center;
   align-items: center;

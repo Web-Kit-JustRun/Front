@@ -1,5 +1,7 @@
+import React from "react";
 import styled from "styled-components";
 import InputForm from "../Common/InputForm";
+import logo from "../../img/edukit logo.png";
 
 const RegisterComponent = (props) => {
   const {
@@ -25,143 +27,194 @@ const RegisterComponent = (props) => {
   } = props;
 
   return (
-    <RegisterComponentBlock>
-      <RegisterForm>
-        <h1>회원 가입</h1>
-        <InputForm
-          title="아이디"
-          inputTitle="ID"
-          eMsgColor={idError ? "red" : "white"}
-          eMsgContent={idError ? "아이디를 입력해 주세요" : ""}
-          onChange={handleIdChange}
-          value={userId}
-        />
-        <InputForm
-          title="비밀번호"
-          inputTitle="Password"
-          type="password"
-          eMsgColor={pwError ? "red" : "white"}
-          eMsgContent={pwError ? "비밀번호를 입력해 주세요" : ""}
-          onChange={handlePwChange}
-          value={userPw}
-        />
-        <InputForm
-          title="비밀번호 확인"
-          inputTitle="Confirm Password"
-          type="password"
-          eMsgColor={pw2Error ? "red" : "white"}
-          eMsgContent={pw2Error ? "비밀번호가 일치하지 않습니다" : ""}
-          onChange={handlePw2Change}
-          value={userPw2}
-        />
-        <InputForm
-          title="이름"
-          inputTitle="Name"
-          eMsgColor={nameError ? "red" : "white"}
-          eMsgContent={nameError ? "이름을 입력해 주세요" : ""}
-          onChange={handleNameChange}
-          value={userName}
-        />
-        <EmailForm>
-          <EmailInput>
-            <InputForm
-              title="이메일"
-              inputTitle="Email"
-              eMsgColor={emailError ? "red" : "white"}
-              eMsgContent={emailError ? "이메일을 입력해 주세요" : ""}
-              onChange={handleEmailChange}
-              value={userEmail}
-            />
-          </EmailInput>
-
-          <AtSymbol>@</AtSymbol>
-          <InputWrapper>
-            <EmailSelectWrapper>
-              <EmailSelect
-                value={emailDomain}
-                onChange={handleEmailDomainChange}
-              >
-                <option value="gmail.com">gmail.com</option>
-                <option value="naver.com">naver.com</option>
-                <option value="hanmail.net">hanmail.net</option>
-              </EmailSelect>
-            </EmailSelectWrapper>
-          </InputWrapper>
-        </EmailForm>
-        <div>
-          <button type="button" onClick={handleFormSubmit}>
-            가입하기
-          </button>
-        </div>
-        <ActionItem onClick={() => handleNavigate("/login")}>취소</ActionItem>
-      </RegisterForm>
-    </RegisterComponentBlock>
+    <Container>
+      <LogoSection>
+        <LogoContainer>
+          <Logo src={logo} alt="금오공대 LMS" />
+          <LogoText>금오공대 LMS</LogoText>
+        </LogoContainer>
+      </LogoSection>
+      <FormSection>
+        <RegisterCard>
+          <h1>회원 가입</h1>
+          <Form>
+            <InputWrapper>
+              <InputForm
+                title="아이디"
+                inputTitle="ID"
+                eMsgColor={idError ? "red" : "white"}
+                eMsgContent={idError ? "아이디를 입력해 주세요" : ""}
+                onChange={handleIdChange}
+                value={userId}
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <InputForm
+                title="비밀번호"
+                inputTitle="Password"
+                type="password"
+                eMsgColor={pwError ? "red" : "white"}
+                eMsgContent={pwError ? "비밀번호를 입력해 주세요" : ""}
+                onChange={handlePwChange}
+                value={userPw}
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <InputForm
+                title="비밀번호 확인"
+                inputTitle="Confirm Password"
+                type="password"
+                eMsgColor={pw2Error ? "red" : "white"}
+                eMsgContent={pw2Error ? "비밀번호가 일치하지 않습니다" : ""}
+                onChange={handlePw2Change}
+                value={userPw2}
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <InputForm
+                title="이름"
+                inputTitle="Name"
+                eMsgColor={nameError ? "red" : "white"}
+                eMsgContent={nameError ? "이름을 입력해 주세요" : ""}
+                onChange={handleNameChange}
+                value={userName}
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <EmailForm>
+                <EmailInput>
+                  <InputForm
+                    title="이메일"
+                    inputTitle="Email"
+                    eMsgColor={emailError ? "red" : "white"}
+                    eMsgContent={emailError ? "이메일을 입력해 주세요" : ""}
+                    onChange={handleEmailChange}
+                    value={userEmail}
+                  />
+                </EmailInput>
+                <AtSymbol>@</AtSymbol>
+                <EmailSelectWrapper>
+                  <EmailSelect
+                    value={emailDomain}
+                    onChange={handleEmailDomainChange}
+                  >
+                    <option value="gmail.com">gmail.com</option>
+                    <option value="naver.com">naver.com</option>
+                    <option value="hanmail.net">hanmail.net</option>
+                  </EmailSelect>
+                </EmailSelectWrapper>
+              </EmailForm>
+            </InputWrapper>
+            <ActionButton onClick={handleFormSubmit}>가입하기</ActionButton>
+            <ActionButton onClick={() => handleNavigate("/login")}>
+              취소
+            </ActionButton>
+          </Form>
+        </RegisterCard>
+      </FormSection>
+    </Container>
   );
 };
 
-const RegisterComponentBlock = styled.div`
+const Container = styled.div`
+  display: flex;
   height: 100vh;
+  background-color: #f4f4f4;
+`;
+
+const LogoSection = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #e9f4ff;
+`;
+
+const LogoContainer = styled.div`
+  text-align: center;
+`;
+
+const Logo = styled.img`
+  width: 150px;
+  height: auto;
+  margin-bottom: 10px;
+`;
+
+const LogoText = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  color: #007bff;
+`;
+
+const FormSection = styled.div`
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #ffffff;
 `;
 
-const EmailInput = styled.div`
-  margin-top: 3px;
-`;
-
-const RegisterForm = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+const RegisterCard = styled.div`
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 400px;
 
   h1 {
-    margin-bottom: 30px;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333333;
+    text-align: center;
   }
+`;
 
-  input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 5px;
-  }
+const Form = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
-  button {
-    width: 100%;
-    padding: 10px;
-    background-color: #4491ff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 1em;
-  }
+const InputWrapper = styled.div`
+  margin-bottom: 20px;
+`;
 
-  button:hover {
-    background-color: #4a78ba;
+const ActionButton = styled.button`
+  width: 100%;
+  padding: 10px;
+  background-color: #4491ff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: all 0.3s;
+
+  &:hover {
+    background-color: #3778d9;
   }
 `;
 
 const EmailForm = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
 `;
 
-const InputWrapper = styled.div`
+const EmailInput = styled.div`
   flex: 1;
-  border-bottom: 1px solid grey;
 `;
 
 const AtSymbol = styled.span`
   padding: 0 5px;
   font-size: 1em;
   color: #333;
-  margin-left: 15px;
 `;
 
 const EmailSelectWrapper = styled.div`
   position: relative;
-  width: 110%;
+  width: 100%;
+
   &::after {
     content: "▼";
     position: absolute;
@@ -184,19 +237,6 @@ const EmailSelect = styled.select`
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;
-`;
-
-const ActionItem = styled.span`
-  margin: 0 10px;
-  margin-top: 20px;
-  cursor: pointer;
-  color: #6b6b6b;
-  font-size: 1rem;
-  border-bottom: 1px solid grey;
-  text-decoration: none;
-  &:hover {
-    color: #000000;
-  }
 `;
 
 export default RegisterComponent;

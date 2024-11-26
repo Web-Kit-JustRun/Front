@@ -22,17 +22,17 @@ const RankContainer = () => {
 
   // 티어 아이콘을 가져오는 함수
   const getTierIcon = (percentage) => {
-    if (percentage <= 20) return diamond;
-    if (percentage <= 30) return platinum;
-    if (percentage <= 40) return gold;
-    if (percentage <= 50) return silver;
+    if (percentage > 2500) return diamond;
+    else if (percentage > 2000) return platinum;
+    else if (percentage > 1700) return gold;
+    if (percentage > 500) return silver;
     return bronze;
   };
 
   useEffect(() => {
     const fetchRankingData = async () => {
       try {
-        const topRankingPromise = request("/api/ranking/top", "GET");
+        const topRankingPromise = request("/api/ranking", "GET");
         const userRankingPromise = request(
           `/api/users/${userData.user.userId}/ranking`,
           "GET",
@@ -44,7 +44,7 @@ const RankContainer = () => {
         ]);
 
         if (topRankingResult.status === "fulfilled") {
-          setTop100(topRankingResult.value);
+          setTop100(topRankingResult.value.top100);
         }
         if (userRankingResult.status === "fulfilled") {
           setUserRank(userRankingResult.value);
@@ -76,7 +76,7 @@ const RankContainer = () => {
       {userRank && (
         <MyRank>
           <ProfileImage>
-            <img src={getTierIcon(rankingPercentage)} alt="티어 아이콘" />
+            <img src={getTierIcon(userRank.rankingPoints)} alt="티어 아이콘" />
           </ProfileImage>
           <RankDetails>
             <RankCell>{userData.user.name}</RankCell>
@@ -90,6 +90,7 @@ const RankContainer = () => {
           <thead>
             <RankHeader>
               <th>Rank</th>
+              <th>등급</th>
               <th>Name</th>
               <th>Ranking Points</th>
             </RankHeader>
@@ -98,6 +99,13 @@ const RankContainer = () => {
             {top100.map((user) => (
               <RankRow key={user.rank}>
                 <RankCell>{user.rank}</RankCell>
+                <RankCell>
+                  {" "}
+                  <img
+                    src={getTierIcon(user.rankingPoints)}
+                    alt="티어 아이콘"
+                  />
+                </RankCell>
                 <RankCell>{user.name}</RankCell>
                 <RankCell>{user.rankingPoints}</RankCell>
               </RankRow>
@@ -174,6 +182,16 @@ const RankHeader = styled.tr`
   font-weight: bold;
 `;
 
+const RankCell = styled.td`
+  text-align: center;
+  padding: 10px 0;
+  color: #333;
+
+  & img {
+    width: 20px;
+  }
+`;
+
 const RankRow = styled.tr`
   &:nth-child(even) {
     background-color: #f0f8ff;
@@ -182,19 +200,16 @@ const RankRow = styled.tr`
   &:hover {
     background-color: #e3f2fd;
   }
-`;
 
-const RankCell = styled.td`
-  width: 33.33%;
-  text-align: center;
-  padding: 10px 0;
-  color: #333;
+  & td:nth-child(2) {
+    width: 40px; /* 두 번째 열의 너비를 40px로 설정 */
+  }
 `;
 
 const ScrollableContainer = styled.div`
   width: 80%;
   max-width: 800px;
-  height: 80%;
+  height: 100%;
   padding: 20px;
   border: 1px solid #007bff;
   overflow-y: auto;

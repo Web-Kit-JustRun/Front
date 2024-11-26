@@ -22,30 +22,29 @@ const StoreContainer = () => {
   const { userId } = userData;
   const request = useRequest();
   console.log("selectedMenu:", selectedMenu); // 상태 확인
-  
+
   useEffect(() => {
     // const resetMenu = () => {
-      setSelectedMenu("");
-      // };
-      // resetMenu();
-    }, [setSelectedMenu]);
-    
-    // 아이템 목록 조회
-    useEffect(() => {
-      const fetchItemData = async () => {
-        try {
-          const data = await request("/api/store/items", "GET");
-          
-          data && setItems(data);
-        } catch (error) {
-          console.error("Error fetching item data:", error);
-        }
-      };
-      
-      fetchItemData();
-    }, [request]);
-    
-    // console.log("🚀 ~ StoreContainer ~ items:", items)
+    setSelectedMenu("");
+    // };
+    // resetMenu();
+  }, [setSelectedMenu]);
+
+  // 아이템 목록 조회
+  useEffect(() => {
+    const fetchItemData = async () => {
+      try {
+        const data = await request("/api/store/items", "GET");
+
+        data && setItems(data);
+      } catch (error) {
+        console.error("Error fetching item data:", error);
+      }
+    };
+
+    fetchItemData();
+  }, [request]);
+
   // 리워드 조회
   useEffect(() => {
     const fetchRewardData = async () => {
@@ -110,7 +109,7 @@ const StoreContainer = () => {
                 <FontAwesomeIcon icon={faTicket} size="2x" />
                 <ItemDetails>
                   <ItemName>{item.itemName}</ItemName>
-                  <ItemPrice>가격: {item.price} Kit</ItemPrice>
+                  <ItemPrice>{item.price} Kit</ItemPrice>
                   <QuantityInput
                     type="number"
                     min="1"
@@ -141,9 +140,8 @@ const StoreContainerBlock = styled.div`
 `;
 
 const ScrollableContainer = styled.div`
-  width: 80%;
-  max-width: 800px;
-  height: 500px;
+  width: 90%;
+  height: calc(100vh - 210px);
   overflow-y: auto;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -177,6 +175,23 @@ const QuantityInput = styled.input`
   font-size: 14px;
   border: 1px solid #ddd;
   border-radius: 5px;
+
+  -webkit-appearance: number-input;
+  -moz-appearance: textfield;
+  appearance: number-input;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: inline;
+    appearance: inline;
+    display: block;
+  }
+
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+  }
 `;
 
 const BuyItem = styled.button`
@@ -199,7 +214,7 @@ const ItemDetails = styled.div`
 `;
 
 const ItemName = styled.h2`
-  font-size: 16px;
+  font-size: 14px;
   margin: 10px 0;
 `;
 

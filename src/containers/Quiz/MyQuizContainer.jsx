@@ -25,8 +25,6 @@ const MyQuizContainer = () => {
     navigate("/solvequiz", { state: { quiz } }); // 퀴즈 데이터를 state로 전달
   };
 
-  console.log("데이터 들왔니", quizzes);
-
   return (
     <MyQuizContainerBlock>
       <TitleContainer>

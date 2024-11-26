@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { FaStore } from "react-icons/fa";
 import logo from "../../img/edukit logo.png";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { currentLessonIdStore, lessonStore } from "../../store/lessonStore";
 import { userStore } from "../../store/userStore";
@@ -14,9 +14,9 @@ const Header = () => {
   const [currentLessonId, setCurrentLessonId] =
     useRecoilState(currentLessonIdStore);
   const [userData, setUserData] = useRecoilState(userStore);
-  // console.log("🚀 ~ Header ~ userData:", userData)
   const userName = userData.user.name;
   const request = useRequest();
+  const [studentNumber, setStudentNumber] = useState(null);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -33,6 +33,19 @@ const Header = () => {
     };
     fetchCourses();
   }, [request, setLessons, userData.user.userId]);
+
+  useEffect(() => {
+    const fetchStudentNumber = async () => {
+      try {
+        const data = await request(`/api/users/profile`, "GET", null, {});
+        setStudentNumber(data.studentNumber);
+      } catch (error) {
+        console.error("Failed to fetch user profile:", error);
+      }
+    };
+
+    fetchStudentNumber();
+  }, [request]);
 
   const handleClassChange = (e) => {
     const lessonId = e.target.value;
@@ -70,10 +83,10 @@ const Header = () => {
               navigate("/mypage");
             }}
           >
-            {userName}
+            {`(${studentNumber}) ${userName}`}
           </UserId>
           <RankingPoints onClick={() => navigate("/rank")}>
-            {userData.user.rankingPoints} RP
+            {userData.user.rankingPoints} point
           </RankingPoints>
         </UserInfo>
         <StoreIcon onClick={() => navigate("/store")}>
@@ -133,7 +146,7 @@ const UserInfo = styled.div`
   text-align: right;
 
   div {
-    font-size: 0.9em;
+    font-size: 1.2em;
   }
 `;
 

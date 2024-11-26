@@ -22,13 +22,29 @@ const MainPage = () => {
     const today = new Date();
     const timeline = [];
 
-    for (let i = -5; i <= 5; i++) {
+    const events = [
+      { dateOffset: -5, task: "데이터베이스 기말 보고서 초안 작성" },
+      { dateOffset: -4, task: "운영체제 퀴즈 (오전 10시 ~ 11시)" },
+      { dateOffset: -3, task: "소프트웨어 공학 중간 발표 준비" },
+      { dateOffset: -2, task: "프로그래밍 기초 실습 / 코드 리뷰" },
+      { dateOffset: -1, task: "과제 제출 마감: 컴퓨터 네트워크 (자정까지)" },
+      {
+        dateOffset: 0,
+        task: "중간고사 (오후 2시 ~ 4시) / 팀 프로젝트 발표 준비",
+      },
+      { dateOffset: 1, task: "캡스톤 디자인 발표 (오후 3시 ~ 5시)" },
+      { dateOffset: 2, task: "기말고사 대비 스터디 모임 (오후 7시)" },
+      { dateOffset: 3, task: "알고리즘 문제 풀이 세션 (오전 10시 ~ 12시)" },
+      { dateOffset: 4, task: "기술 세미나 참여: AI와 미래 (오후 5시 ~ 7시)" },
+      { dateOffset: 5, task: "수업 프로젝트 마감일: 웹 개발 프로젝트" },
+    ];
+
+    for (const event of events) {
       const date = new Date(today);
-      date.setDate(today.getDate() + i);
+      date.setDate(today.getDate() + event.dateOffset);
       timeline.push({
         date: date.toISOString().split("T")[0], // YYYY-MM-DD 형식
-        task:
-          i === 0 ? "오늘의 주요 일정" : `일정 ${i > 0 ? "D+" + i : "D" + i}`, // 예제 일정
+        task: event.task,
       });
     }
 
