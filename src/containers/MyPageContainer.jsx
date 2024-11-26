@@ -170,6 +170,7 @@ const MyPageContainer = () => {
           display: true,
           text: "Rank Percentage (%)",
         },
+        reverse: true, // X축 반전
       },
       y: {
         title: {

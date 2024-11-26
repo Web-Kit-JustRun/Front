@@ -76,12 +76,12 @@ const CreateQuizContainer = () => {
   return (
     <QuizContainer>
       <TitleInput
-        placeholder="문제 제목 입력 - (클릭하여 원하는 제목을 입력할 수 있다)"
+        placeholder="문제 제목 입력"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
       <QuestionInput
-        placeholder="문제 내용, 설명 입력 - (클릭하여 본문 내용을 입력할 수 있다)"
+        placeholder="문제 내용, 설명 입력"
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
       />
@@ -119,7 +119,7 @@ const QuizContainer = styled.div`
   max-width: 960px;
   margin: 20px auto;
   padding: 40px;
-  background-color: #f9f9f9;
+  background-color: #d3e3f5;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   font-family: Arial, sans-serif;
