@@ -38,30 +38,33 @@ const StoreSideBar = ({ layoutType }) => {
 
   return (
     <SideBarContainer>
-      <RewardPointsContainer>
-        <h3>사용가능 kit</h3>
-        <RewardPoints>
-          {rewardPoints !== null ? `${rewardPoints} Kit` : "로딩 중..."}
-        </RewardPoints>
-      </RewardPointsContainer>
-      <WholeMenuButton onClick={() => handleMenuClick("")}>
-        전체메뉴
-      </WholeMenuButton>
-      <MenuButton onClick={() => handleMenuClick("frankburger")}>
-        프랭크버거
-      </MenuButton>
-      <MenuButton onClick={() => handleMenuClick("bookcafe")}>
-        북카페
-      </MenuButton>
-      <MenuButton onClick={() => handleMenuClick("study")}>수업</MenuButton>
       {layoutType === "store" ? (
-        <StorePurchaseButton
-          onClick={() => {
-            navigate("/purchaselist");
-          }}
-        >
-          구매 목록
-        </StorePurchaseButton>
+        <>
+          <RewardPointsContainer>
+            <RewardPoints>
+              {rewardPoints !== null
+                ? `잔여 kit : ${rewardPoints}`
+                : "로딩 중..."}
+            </RewardPoints>
+          </RewardPointsContainer>
+          <WholeMenuButton onClick={() => handleMenuClick("")}>
+            전체메뉴
+          </WholeMenuButton>
+          <MenuButton onClick={() => handleMenuClick("frankburger")}>
+            프랭크버거
+          </MenuButton>
+          <MenuButton onClick={() => handleMenuClick("bookcafe")}>
+            북카페
+          </MenuButton>
+          <MenuButton onClick={() => handleMenuClick("study")}>수업</MenuButton>
+          <StorePurchaseButton
+            onClick={() => {
+              navigate("/purchaselist");
+            }}
+          >
+            구매 목록
+          </StorePurchaseButton>
+        </>
       ) : (
         <StorePurchaseButton
           onClick={() => {
@@ -87,7 +90,7 @@ const SideBarContainer = styled.div`
 const RewardPointsContainer = styled.div`
   margin-bottom: 20px;
   padding: 10px;
-  background-color: #f4f4f4;
+  background-color: #ffffff;
   border-radius: 5px;
   text-align: center;
 `;

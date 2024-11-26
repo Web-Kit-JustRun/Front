@@ -15,8 +15,7 @@ const SolveQuizBlock = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  min-height: 100vh;
-  background-color: #f5f5f5;
+  width: 95%;
+  min-height: calc(100vh-100px);
   padding: 20px;
 `;

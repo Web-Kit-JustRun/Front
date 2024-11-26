@@ -33,7 +33,7 @@ const authenticatedRoutes = [
   //메인 홈
   { path: "/main", element: <Main />, layoutType: "main" },
   //마이페이지
-  { path: "/mypage", element: <MyPage />, layoutType: "main" },
+  { path: "/mypage", element: <MyPage />, layoutType: "mypage" },
   //비밀번호 변경 페이지
   { path: "/change-password", element: <ChangePw />, layoutType: "main" },
 
@@ -66,7 +66,11 @@ const authenticatedRoutes = [
   //내가 등록한 퀴즈 조회
   { path: "/myquiz", element: <MyQuiz />, layoutType: "lesson" },
 
-  { path: "/quizapprovelist", element: <QuizApprovalBoard/>, layoutType: "lesson"},
+  {
+    path: "/quizapprovelist",
+    element: <QuizApprovalBoard />,
+    layoutType: "lesson",
+  },
   //과제 페이지
   { path: "/assignments", element: <AssignmentBoard />, layoutType: "lesson" },
   {

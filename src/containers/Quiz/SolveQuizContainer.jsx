@@ -96,18 +96,9 @@ const SolveQuizContainer = () => {
   return (
     <SolveQuizContainerBlock>
       <HeaderContainer>
-        <h1>퀴즈 풀기</h1>
-        <p>문제 ID: {quiz.quizId}</p>
-        <p>과정 이름: {quiz.courseName}</p>
-        <p>제목: {quiz.title}</p>
-        <p>
-          생성 날짜: {new Date(quiz.creationDate).toLocaleDateString("ko-KR")}
-        </p>
-        <QuestionContainer>
-          <SyntaxHighlighter language="javascript" style={atomOneLight}>
-            {quiz.question}
-          </SyntaxHighlighter>
-        </QuestionContainer>
+        <h1>{quiz.title}</h1>
+        <br />
+        <QuestionContainer>{quiz.question}</QuestionContainer>
       </HeaderContainer>
       <ChoicesContainer>
         {chunkedChoices.map((row, rowIndex) => (
@@ -134,6 +125,9 @@ const SolveQuizContainer = () => {
           baseBgColor="#f5f5f5"
         />
       )}
+      <p>
+        생성 날짜: {new Date(quiz.creationDate).toLocaleDateString("ko-KR")}
+      </p>
     </SolveQuizContainerBlock>
   );
 };
@@ -143,9 +137,9 @@ export default SolveQuizContainer;
 // Styled Components
 const SolveQuizContainerBlock = styled.div`
   width: 100%;
-  height: 100vh; /* 화면 전체 높이 */
+  height: calc(78vh); /* 화면 전체 높이 */
   padding: 20px;
-  background-color: #f0f8ff;
+  background-color: #d0e7fc;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -209,5 +203,28 @@ const SubmitButton = styled.button`
 
 const QuestionContainer = styled.div`
   width: 80%; /* 너비 제한 */
-  margin: 0 auto; /* 중앙 정렬 */
+  margin: 20px auto; /* 상단 및 중앙 정렬 */
+  padding: 20px; /* 내부 여백 */
+  border-radius: 10px; /* 모서리 둥글게 */
+  background-color: #ffffff; /* 흰색 배경 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  font-size: 18px; /* 텍스트 크기 */
+  color: #333; /* 텍스트 색상 */
+  line-height: 1.6; /* 텍스트 줄 간격 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  font-weight: bold; /* 텍스트 두껍게 */
+  position: relative; /* 아이콘 등을 추가할 때 유용 */
+
+  &:before {
+    content: "문제"; /* 제목 추가 */
+    position: absolute;
+    top: -20px; /* 상단에 위치 */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000000; /* 강조 색상 */
+    color: #ebebeb;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+  }
 `;

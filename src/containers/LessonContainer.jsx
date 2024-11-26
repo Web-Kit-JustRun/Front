@@ -10,7 +10,7 @@ const LessonContainer = () => {
   const navigate = useNavigate();
   const [announcements, setAnnouncements] = useState([]);
   const [assignments, setAssignments] = useState([]);
-  const [lectures, setLectures] = useState([]); // 강의자료 더미 데이터
+  const [lectures, setLectures] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
 
   const userState = useRecoilValue(userStore);
@@ -34,33 +34,41 @@ const LessonContainer = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 더미 공지사항 설정
+        // 공지사항 데이터
         setAnnouncements([
-          { id: 1, title: "공지사항 1", date: "2023-10-01" },
-          { id: 2, title: "공지사항 2", date: "2023-10-05" },
-          { id: 3, title: "공지사항 3", date: "2023-10-10" },
+          { id: 1, title: "기말고사 일정 공지", date: "2024.12.01." },
+          { id: 2, title: "과제 제출 연장 안내", date: "2024.11.25." },
+          { id: 3, title: "중간고사 성적 발표", date: "2024.11.15." },
+          { id: 4, title: "강의실 변경 안내", date: "2024.11.10." },
+          {
+            id: 5,
+            title: "학기 말 프로젝트 발표 준비 안내",
+            date: "2024.11.05.",
+          },
         ]);
 
-        // 더미 강의자료 설정
+        // 강의자료 데이터
         setLectures([
-          { courseId: 1, courseName: "데이터베이스 개론" },
-          { courseId: 2, courseName: "운영체제" },
-          { courseId: 3, courseName: "알고리즘 입문" },
+          { courseId: 1, courseName: "데이터베이스 설계 기초" },
+          { courseId: 2, courseName: "운영체제 주요 개념" },
+          { courseId: 3, courseName: "알고리즘 시간복잡도" },
+          { courseId: 4, courseName: "소프트웨어 공학 요구사항 분석" },
+          { courseId: 5, courseName: "네트워크 통신 프로토콜" },
         ]);
 
-        // 과제 목록 API 호출
+        // 과제 목록 데이터
         const assignmentsData = await request(
           `/api/courses/${currentLessonId}/assignments`,
           "GET",
         );
-        setAssignments(assignmentsData.slice(0, 3));
+        setAssignments(assignmentsData.slice(0, 5)); // 5개로 제한
 
-        // 퀴즈 리스트 API 호출
+        // 퀴즈 리스트 데이터
         const quizzesData = await request(
           `/api/courses/${currentLessonId}/quizzes`,
           "GET",
         );
-        setQuizzes(quizzesData.slice(0, 3));
+        setQuizzes(quizzesData.slice(0, 5)); // 5개로 제한
       } catch (error) {
         console.error("데이터를 가져오는 데 실패했습니다:", error);
       }
@@ -147,13 +155,13 @@ const LessonContainer = () => {
   );
 };
 
+// Styled Components
 const LessonBlock = styled.div`
-  height: 100vh;
+  height: calc(100vh - 120px);
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 10px;
-  background-color: #f9fafb;
   width: 100%;
 `;
 
@@ -169,7 +177,6 @@ const Card = styled.div`
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  /* width: 100%; */
   flex-grow: 1;
   transition: transform 0.2s ease-in-out;
 
