@@ -56,6 +56,12 @@ const StoreSideBar = ({ layoutType }) => {
           <MenuButton onClick={() => handleMenuClick("bookcafe")}>
             북카페
           </MenuButton>
+          <MenuButton onClick={() => handleMenuClick("cafeteria")}>
+            식당
+          </MenuButton>
+          <MenuButton onClick={() => handleMenuClick("book and stationery")}>
+            서적 및 문구류
+          </MenuButton>
           <MenuButton onClick={() => handleMenuClick("study")}>수업</MenuButton>
           <StorePurchaseButton
             onClick={() => {
