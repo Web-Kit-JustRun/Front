@@ -70,7 +70,8 @@ const NavBar = styled.div`
   position: fixed;
   top: 80px;
   left: 0;
-  overflow-y: auto;
+  overflow-y: hidden;
+  overflow: hidden;
   background-color: #0077cc;
   color: #ffffff;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);

@@ -83,11 +83,14 @@ const Header = () => {
               navigate("/mypage");
             }}
           >
-            {`(${studentNumber}) ${userName}`}
+            {`(${userData.user.userType === "professor" ? "20170315" : studentNumber}) ${userName}`}
           </UserId>
-          <RankingPoints onClick={() => navigate("/rank")}>
-            {userData.user.rankingPoints} point
-          </RankingPoints>
+          {userData.user.userType !== "professor" && (
+            <RankingPoints onClick={() => navigate("/rank")}>
+              {" "}
+              {userData.user.rankingPoints} points{" "}
+            </RankingPoints>
+          )}
         </UserInfo>
         <StoreIcon onClick={() => navigate("/store")}>
           <FaStore />

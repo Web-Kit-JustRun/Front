@@ -58,13 +58,16 @@ const QuizBoard = () => {
       <BoardHeader>
         <Title>퀴즈 게시판</Title>
         <ButtonGroup>
-          <RegisterButton
-            onClick={() => {
-              navigate("/quizzes/add");
-            }}
-          >
-            등록하기
-          </RegisterButton>
+          {userData.userType !== "professor" ? (
+            <RegisterButton
+              onClick={() => {
+                navigate("/quizzes/add");
+              }}
+            >
+              등록하기
+            </RegisterButton>
+          ) : null}
+
           {userData.userType === "professor" && (
             <QuizApprovalButton onClick={handleQuizApprovalClick}>
               퀴즈 허가 목록 조회

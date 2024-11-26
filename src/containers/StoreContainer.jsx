@@ -49,9 +49,10 @@ const StoreContainer = () => {
   useEffect(() => {
     const fetchRewardData = async () => {
       try {
-        const data = await request(`/api/users/${userId}/rewards`, "GET");
+        const data = await request(`/api/users/reward_point`, "GET");
 
-        data && setRewardPoints(data.rewardPoints);
+        data && setRewardPoints(data.rewardPoint);
+        console.log(data);
       } catch (error) {
         console.error("Error fetching reward data:", error);
       }
@@ -76,7 +77,7 @@ const StoreContainer = () => {
   const handleBuy = async (e, item) => {
     e.preventDefault();
     const quantity = quantities[item.itemId] || 1; // 수량 기본값: 1
-
+    console.log(rewardPoints);
     if (rewardPoints >= item.price * quantity) {
       try {
         await request(`/api/store/items/${item.itemId}/purchase`, "POST", {
