@@ -1,13 +1,21 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { currentLessonIdStore } from "../../store/lessonStore";
 
 const Navbar = ({ courseName }) => {
+  const currentLessonId = useRecoilValue(currentLessonIdStore);
+
   const navigate = useNavigate();
 
   return (
     <NavbarBlock>
-      <Category>{courseName || "강의"}</Category>
+      <Category>{`${courseName || "강의"} CD00000${currentLessonId}`}</Category>
       <SectionLabel>카테고리</SectionLabel>
+      <NavItem>
+        <i className="fas fa-chalkboard-teacher"></i>
+        <span>공지 사항</span>
+      </NavItem>
       <NavItem onClick={() => navigate("/lectures")}>
         <i className="fas fa-chalkboard-teacher"></i>
         <span>강의 목록</span>
@@ -16,13 +24,23 @@ const Navbar = ({ courseName }) => {
         <i className="fas fa-book"></i>
         <span>강의 자료</span>
       </NavItem>
+      <SectionLabel>프로젝트 허브</SectionLabel>
       <NavItem onClick={() => navigate("/assignments")}>
         <i className="fas fa-tasks"></i>
         <span>과제 목록</span>
       </NavItem>
+      <NavItem>
+        <i className="fas fa-tasks"></i>
+        <span>팀 실습</span>
+      </NavItem>
+      <SectionLabel>학생 배움터</SectionLabel>
       <NavItem onClick={() => navigate("/quizzes")}>
         <i className="fas fa-question-circle"></i>
         <span>퀴즈 목록</span>
+      </NavItem>
+      <NavItem>
+        <i className="fas fa-tasks"></i>
+        <span>토론 게시판</span>
       </NavItem>
     </NavbarBlock>
   );
@@ -34,7 +52,7 @@ const NavbarBlock = styled.div`
   flex-direction: column;
   padding: 20px 10px;
   height: calc(100vh - 100px);
-  background-color: #1f81c7; /* 네비게이션 진한 블루 */
+  background-color: #1f81c7;
   border-radius: 10px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
