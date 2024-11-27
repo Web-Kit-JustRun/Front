@@ -75,28 +75,31 @@ const StoreContainer = () => {
   };
 
   const handleBuy = async (e, item) => {
-    e.preventDefault();
-    const quantity = quantities[item.itemId] || 1; // 수량 기본값: 1
-    console.log(rewardPoints);
-    if (rewardPoints >= item.price * quantity) {
-      try {
-        await request(`/api/store/items/${item.itemId}/purchase`, "POST", {
-          purchase_id: item.itemId,
-          price: item.price,
-          quantity: quantity, // 수량 포함
-        });
+    const isConfirmed = window.confirm("상품을 구매하시겠습니까?");
+    if (isConfirmed) {
+      e.preventDefault();
+      const quantity = quantities[item.itemId] || 1; // 수량 기본값: 1
+      console.log(rewardPoints);
+      if (rewardPoints >= item.price * quantity) {
+        try {
+          await request(`/api/store/items/${item.itemId}/purchase`, "POST", {
+            purchase_id: item.itemId,
+            price: item.price,
+            quantity: quantity, // 수량 포함
+          });
 
-        alert(
-          `"${item.itemName}"을(를) ${
-            item.price * quantity
-          } 포인트에 구매했습니다!`,
-        );
-      } catch (error) {
-        console.error("Error during purchase:", error);
-        alert("구매 중 오류가 발생했습니다. 다시 시도해주세요.");
+          alert(
+            `"${item.itemName}"을(를) ${
+              item.price * quantity
+            } 포인트에 구매했습니다!`,
+          );
+        } catch (error) {
+          console.error("Error during purchase:", error);
+          alert("구매 중 오류가 발생했습니다. 다시 시도해주세요.");
+        }
+      } else {
+        alert("포인트 부족");
       }
-    } else {
-      alert("포인트 부족");
     }
   };
 
@@ -107,7 +110,7 @@ const StoreContainer = () => {
           <ItemList>
             {filteredItems.map((item) => (
               <ItemCard key={item.itemId}>
-                <FontAwesomeIcon icon={faTicket} size="2x" />
+                <ItemImage src={item.imageUrl} alt={item.itemName} />
                 <ItemDetails>
                   <ItemName>{item.itemName}</ItemName>
                   <ItemPrice>{item.price} Kit</ItemPrice>
@@ -208,6 +211,13 @@ const BuyItem = styled.button`
   &:hover {
     background-color: #45a049;
   }
+`;
+
+const ItemImage = styled.img`
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-bottom: 1px solid #ddd;
 `;
 
 const ItemDetails = styled.div`
